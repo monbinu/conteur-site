@@ -170,6 +170,37 @@
       text-transform: uppercase;
     }
 
+    /* ── Status row ── */
+    .board-status {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: clamp(10px, 2vh, 18px) clamp(24px, 5vw, 60px);
+      border-bottom: 1px solid var(--board-border);
+      background: rgba(200,160,96,0.03);
+    }
+
+    .board-status-text {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(0.58rem, 1.3vw, 0.8rem);
+      letter-spacing: clamp(0.16em, 0.8vw, 0.3em);
+      text-transform: uppercase;
+      color: var(--amber);
+      line-height: 1.6;
+    }
+
+    .board-status-text::after {
+      content: '_';
+      animation: blink 1.1s step-start infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
     /* rows container */
     #boardRows {
       flex: 1;
@@ -324,12 +355,16 @@
       <span class="col-label">Destination</span>
     </div>
 
+    <div class="board-status">
+      <span class="board-status-text">Select your next destination</span>
+    </div>
+
     <div id="boardRows"></div>
 
   </div>
 
   <script>
-    const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—0123456789';
+    const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const COL_W   = 11;
 
     const CITIES = [
