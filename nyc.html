@@ -497,33 +497,175 @@
 
     /* ── Travel section ───────────────────────── */
 
-    .travel-section {
-      padding: clamp(32px, 5vh, 56px) clamp(24px, 5vw, 60px);
+    .travel-map-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 7;
+      background: var(--board-bg);
+      border-bottom: 1px solid var(--board-border);
+      overflow: hidden;
     }
 
-    .coming-soon {
-      border: 1px dashed rgba(46,40,32,0.2);
-      padding: clamp(40px, 6vh, 72px) clamp(24px, 5vw, 60px);
-      text-align: center;
+    @media (max-width: 600px) { .travel-map-wrap { aspect-ratio: 4 / 3; } }
+
+    .travel-map-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      filter: grayscale(0.2) contrast(1.05);
+    }
+
+    .travel-map-placeholder {
+      position: absolute;
+      inset: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 12px;
+      color: var(--amber-mid);
     }
 
-    .coming-soon-label {
+    .travel-map-placeholder p {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 0.72rem;
       letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: var(--ink-faint);
     }
 
-    .coming-soon-text {
-      font-style: italic;
-      font-size: clamp(0.9rem, 1.6vw, 1.1rem);
-      color: var(--ink-muted);
+    /* ── Filter + grid ────────────────────────── */
+
+    .place-filter-bar {
+      padding: clamp(14px, 2vh, 22px) clamp(24px, 5vw, 60px);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(46,40,32,0.08);
+      background: var(--cream);
+      position: sticky;
+      top: var(--nav-h);
+      z-index: 80;
     }
+
+    .place-filter-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(0.72rem, 0.85vw, 0.78rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      border: 1px solid rgba(46,40,32,0.2);
+      border-radius: 2px;
+      background: none;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .place-filter-btn.active,
+    .place-filter-btn:hover {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+
+    /* ── Split-card grid ──────────────────────── */
+
+    .place-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 900px) { .place-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 540px) { .place-grid { grid-template-columns: 1fr; } }
+
+    .place-card {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(46,40,32,0.1);
+      border-bottom: 1px solid rgba(46,40,32,0.1);
+      text-decoration: none;
+      color: inherit;
+      transition: opacity 0.18s;
+    }
+
+    .place-card:hover { opacity: 0.82; }
+
+    /* dark upper: category + name */
+    .place-card-head {
+      background: var(--board-bg);
+      padding: clamp(20px, 3.5vh, 32px) clamp(18px, 2.5vw, 28px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
+    .place-chip {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber-mid);
+    }
+
+    .place-name {
+      font-size: clamp(1.15rem, 2vw, 1.55rem);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--amber);
+      letter-spacing: 0.01em;
+    }
+
+    /* cream lower: note + address + link */
+    .place-card-body {
+      background: var(--cream);
+      padding: clamp(16px, 2.5vh, 24px) clamp(18px, 2.5vw, 28px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .place-note {
+      font-size: clamp(0.95rem, 1.4vw, 1.05rem);
+      font-style: italic;
+      line-height: 1.72;
+      color: var(--ink-muted);
+      flex: 1;
+    }
+
+    .place-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(46,40,32,0.08);
+    }
+
+    .place-address {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(0.6rem, 0.72vw, 0.68rem);
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      text-transform: uppercase;
+      line-height: 1.5;
+    }
+
+    .place-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color 0.2s;
+    }
+
+    .place-link:hover { color: var(--ink-muted); }
 
     /* ── Page footer ──────────────────────────── */
 
@@ -634,15 +776,21 @@
        TRAVEL
   ══════════════════════════════════════════ -->
   <div class="section" id="tab-travel">
-    <div class="travel-section">
-      <div class="coming-soon">
-        <span class="coming-soon-label">Coming Soon</span>
-        <p class="coming-soon-text">
-          A curated itinerary for New York is in the works —<br>
-          neighbourhoods, galleries, detours, and places worth the walk.
-        </p>
-      </div>
+
+    <!-- MAP EMBED — replace src with your Google My Maps embed URL -->
+    <!-- To create: maps.google.com > Your Places > Maps > Create > share > embed -->
+    <div class="travel-map-wrap">
+      <iframe src="https://www.google.com/maps/d/embed?mid=1VjuxhyfNWxih8j_yCdvlMmx2TrbV4hA" allowfullscreen></iframe>
     </div>
+
+    <div class="place-filter-bar">
+      <button class="place-filter-btn active" data-filter="all">All</button>
+      <button class="place-filter-btn" data-filter="see">See</button>
+      <button class="place-filter-btn" data-filter="read">Read</button>
+      <button class="place-filter-btn" data-filter="eat">Eat &amp; Drink</button>
+      <button class="place-filter-btn" data-filter="walk">Walk</button>
+    </div>
+    <div class="place-grid" id="placeGrid"></div>
   </div>
 
   <!-- ── Footer ────────────────────────────────── -->
@@ -864,6 +1012,169 @@
     }
 
     loadMetCollection();
+
+    /* ═══════════════════════════════════════════
+       TRAVEL PLACES
+    ═══════════════════════════════════════════ */
+
+    const PLACES = [
+
+      // ── See ─────────────────────────────────────
+      {
+        name:    'The Frick Collection',
+        address: '1 E 70th St · Upper East Side',
+        type:    'see',
+        note:    'Vermeer, Rembrandt, Velazquez in a Gilded Age mansion. No tour groups. One of the most intimate great art experiences in the world.',
+        maps:    'https://maps.google.com/?q=The+Frick+Collection+New+York',
+      },
+      {
+        name:    'Neue Galerie',
+        address: '1048 5th Ave · 86th St',
+        type:    'see',
+        note:    'Four focused floors of German and Austrian art, including Klimt\'s Adele Bloch-Bauer I. Cafe Sabarsky is downstairs.',
+        maps:    'https://maps.google.com/?q=Neue+Galerie+New+York',
+      },
+      {
+        name:    'The Morgan Library',
+        address: '225 Madison Ave · Murray Hill',
+        type:    'see',
+        note:    'Pierpont Morgan\'s personal library, left intact. Gutenberg Bibles, Dickens manuscripts. Extraordinary and always undervisited.',
+        maps:    'https://maps.google.com/?q=The+Morgan+Library+Museum+New+York',
+      },
+      {
+        name:    'Printed Matter',
+        address: '231 11th Ave · Chelsea',
+        type:    'see',
+        note:    'The world\'s leading nonprofit dedicated to artists\' books. More ideas per square foot than anywhere else in the city.',
+        maps:    'https://maps.google.com/?q=Printed+Matter+Chelsea+New+York',
+      },
+      {
+        name:    'The Drawing Center',
+        address: '35 Wooster St · SoHo',
+        type:    'see',
+        note:    'The only US museum dedicated entirely to drawing. Free admission, serious programming, and rarely crowded.',
+        maps:    'https://maps.google.com/?q=The+Drawing+Center+New+York',
+      },
+
+      // ── Read ─────────────────────────────────────
+      {
+        name:    'Strand Bookstore',
+        address: '828 Broadway · Union Square',
+        type:    'read',
+        note:    'Eighteen miles of books on four floors. The art section alone takes an afternoon. Find the rare books room upstairs.',
+        maps:    'https://maps.google.com/?q=Strand+Bookstore+New+York',
+      },
+      {
+        name:    'McNally Jackson',
+        address: '52 Prince St · SoHo',
+        type:    'read',
+        note:    'The best general bookshop in the city. Genuinely curated art, architecture, and criticism. The SoHo location is the original.',
+        maps:    'https://maps.google.com/?q=McNally+Jackson+SoHo+New+York',
+      },
+      {
+        name:    'Dashwood Books',
+        address: '33 Bond St · NoHo',
+        type:    'read',
+        note:    'Small, serious, and entirely focused on photography and artists\' books. Everything here has been chosen deliberately.',
+        maps:    'https://maps.google.com/?q=Dashwood+Books+New+York',
+      },
+      {
+        name:    'Housing Works Bookstore',
+        address: '126 Crosby St · SoHo',
+        type:    'read',
+        note:    'Second-hand books in a beautiful two-storey space. Every purchase funds HIV/AIDS services. One of the best rooms in the neighbourhood.',
+        maps:    'https://maps.google.com/?q=Housing+Works+Bookstore+Cafe+New+York',
+      },
+
+      // ── Eat & Drink ───────────────────────────────
+      {
+        name:    'Cafe Sabarsky',
+        address: 'Inside Neue Galerie · 1048 5th Ave',
+        type:    'eat',
+        note:    'A Viennese coffee house inside a museum. The apple strudel justifies the visit alone. Book ahead on weekends.',
+        maps:    'https://maps.google.com/?q=Cafe+Sabarsky+New+York',
+      },
+      {
+        name:    'Odeon',
+        address: '145 West Broadway · Tribeca',
+        type:    'eat',
+        note:    'Open since 1980. The art world has always eaten here. The best room in Tribeca for a long lunch and a conversation that overruns.',
+        maps:    'https://maps.google.com/?q=Odeon+Restaurant+Tribeca+New+York',
+      },
+      {
+        name:    'Sant Ambroeus',
+        address: '259 W 4th St · West Village',
+        type:    'eat',
+        note:    'A Milanese institution with New York roots. The West Village location has the best light. The clientele maps the city\'s art circuit.',
+        maps:    'https://maps.google.com/?q=Sant+Ambroeus+West+Village+New+York',
+      },
+
+      // ── Walk ──────────────────────────────────────
+      {
+        name:    'Chelsea Gallery District',
+        address: '22nd to 27th St · 10th and 11th Avenues',
+        type:    'walk',
+        note:    'Twenty serious shows within four blocks on any given Saturday. Walk from 27th Street south. All free to enter.',
+        maps:    'https://maps.google.com/?q=Chelsea+Gallery+District+New+York',
+      },
+      {
+        name:    'Lower East Side',
+        address: 'Orchard, Eldridge, Rivington Streets',
+        type:    'walk',
+        note:    'Less predictable than Chelsea. Walk on a Saturday afternoon and find three shows you had not planned.',
+        maps:    'https://maps.google.com/?q=Lower+East+Side+New+York',
+      },
+      {
+        name:    'The High Line',
+        address: 'Gansevoort St to 34th St · West Side',
+        type:    'walk',
+        note:    'Walk from 34th Street south, against the crowd. The view from the Whitney terrace at dusk is the right way to end the day.',
+        maps:    'https://maps.google.com/?q=The+High+Line+New+York',
+      },
+    ];
+
+    const TYPE_LABELS = { see: 'See', read: 'Read', eat: 'Eat & Drink', walk: 'Walk' };
+
+    function renderPlaces(filter = 'all') {
+      const placeGrid = document.getElementById('placeGrid');
+      placeGrid.innerHTML = '';
+
+      const filtered = filter === 'all'
+        ? PLACES
+        : PLACES.filter(p => p.type === filter);
+
+      filtered.forEach(p => {
+        const card = document.createElement('a');
+        card.className = 'place-card';
+        card.href = p.maps;
+        card.target = '_blank';
+        card.rel = 'noopener';
+        card.innerHTML = `
+          <div class="place-card-head">
+            <span class="place-chip">${TYPE_LABELS[p.type]}</span>
+            <h3 class="place-name">${p.name}</h3>
+          </div>
+          <div class="place-card-body">
+            <p class="place-note">${p.note}</p>
+            <div class="place-footer">
+              <span class="place-address">${p.address}</span>
+              <span class="place-link">Map &#8594;</span>
+            </div>
+          </div>
+        `;
+        placeGrid.appendChild(card);
+      });
+    }
+
+    renderPlaces();
+
+    document.querySelectorAll('.place-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.place-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderPlaces(btn.dataset.filter);
+      });
+    });
 
     /* ═══════════════════════════════════════════
        TABS
