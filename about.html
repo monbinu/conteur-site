@@ -6,15 +6,16 @@
   <title>About — Conteur</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --cream:        #f4efe6;
+      --cream-dark:   #ede8df;
       --ink:          #2e2820;
       --ink-muted:    #6b6058;
-      --ink-faint:    rgba(46,40,32,0.3);
+      --ink-faint:    #8a7e70;
       --board-bg:     #1a1714;
       --board-deep:   #111010;
       --board-border: #2c2820;
@@ -23,6 +24,7 @@
       --amber-mid:    #7a5c34;
       --amber-dim:    #3d2e1a;
       --nav-h:        60px;
+      --content-w:    680px;
     }
 
     html { scroll-behavior: smooth; }
@@ -33,9 +35,7 @@
       color: var(--ink);
     }
 
-    /* ─────────────────────────────────────────────
-       NAV
-    ───────────────────────────────────────────── */
+    /* ── Nav ──────────────────────────────────── */
 
     .nav {
       position: fixed;
@@ -80,7 +80,7 @@
 
     .nav-link {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.58rem, 0.9vw, 0.7rem);
+      font-size: clamp(0.72rem, 1vw, 0.8rem);
       letter-spacing: 0.18em;
       color: var(--amber-mid);
       text-decoration: none;
@@ -103,12 +103,10 @@
     .nav-link:hover { color: var(--amber); }
     .nav-link:hover::after { transform: scaleX(1); }
 
-    /* ─────────────────────────────────────────────
-       HERO
-    ───────────────────────────────────────────── */
+    /* ── Hero ─────────────────────────────────── */
 
     .hero {
-      min-height: 56vh;
+      min-height: 52vh;
       background: var(--board-bg);
       display: flex;
       flex-direction: column;
@@ -122,7 +120,7 @@
       display: flex;
       gap: clamp(3px, 0.5vw, 7px);
       perspective: 800px;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .tile {
@@ -173,54 +171,129 @@
 
     .hero-tagline.visible { opacity: 1; }
 
-    /* ─────────────────────────────────────────────
-       CONTENT WRAPPER
-    ───────────────────────────────────────────── */
+    /* ── Page layout ──────────────────────────── */
 
-    .content {
-      max-width: 680px;
+    .page-content {
+      max-width: var(--content-w);
       margin: 0 auto;
-      padding: 0 clamp(24px, 5vw, 60px);
+      padding: 0 clamp(24px, 5vw, 48px);
     }
 
-    /* ─────────────────────────────────────────────
-       ABOUT SECTION
-    ───────────────────────────────────────────── */
+    /* ── Opening section ──────────────────────── */
 
-    .about-section {
-      padding: 80px 0 72px;
+    .opening-section {
+      padding: clamp(56px, 10vh, 96px) 0 clamp(48px, 8vh, 80px);
+      border-bottom: 1px solid rgba(46,40,32,0.1);
+    }
+
+    .opening-statement {
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.35;
+      color: var(--ink);
+      margin-bottom: clamp(28px, 4vh, 44px);
+    }
+
+    .opening-body {
+      font-size: clamp(1.05rem, 1.9vw, 1.25rem);
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--ink);
+    }
+
+    .opening-body p + p {
+      margin-top: 1.4em;
+    }
+
+    /* ── What we do section ───────────────────── */
+
+    .what-section {
+      padding: clamp(48px, 8vh, 80px) 0;
       border-bottom: 1px solid rgba(46,40,32,0.1);
     }
 
     .section-label {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.58rem;
+      font-size: 0.72rem;
       letter-spacing: 0.34em;
-      color: var(--ink-muted);
+      color: var(--amber-mid);
       text-transform: uppercase;
-      margin-bottom: 36px;
+      margin-bottom: clamp(28px, 4vh, 44px);
     }
 
-    .about-body {
-      font-size: clamp(1.05rem, 1.9vw, 1.3rem);
+    .what-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .what-item {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 0 clamp(16px, 3vw, 32px);
+      padding: clamp(20px, 3.5vh, 32px) 0;
+      border-bottom: 1px solid rgba(46,40,32,0.08);
+      align-items: start;
+    }
+
+    .what-item:last-child {
+      border-bottom: none;
+    }
+
+    .what-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      color: var(--amber-mid);
+      padding-top: 0.3em;
+    }
+
+    .what-text {
+      font-size: clamp(1.05rem, 1.9vw, 1.2rem);
       font-weight: 300;
-      line-height: 1.85;
+      line-height: 1.8;
       color: var(--ink);
     }
 
-    .about-body p + p { margin-top: 1.5em; }
-
-    .about-body em {
-      font-style: italic;
+    .what-lead {
       font-weight: 400;
+      font-style: italic;
     }
 
-    /* ─────────────────────────────────────────────
-       CONTACT SECTION
-    ───────────────────────────────────────────── */
+    /* ── Why it matters ───────────────────────── */
+
+    .why-section {
+      padding: clamp(48px, 8vh, 80px) 0;
+      border-bottom: 1px solid rgba(46,40,32,0.1);
+    }
+
+    .why-pullquote {
+      font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.6;
+      color: var(--ink-muted);
+      border-left: 2px solid var(--amber);
+      padding-left: clamp(20px, 3vw, 32px);
+      margin-bottom: clamp(28px, 4vh, 44px);
+    }
+
+    .why-body {
+      font-size: clamp(1.05rem, 1.9vw, 1.25rem);
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--ink);
+    }
+
+    .why-body p + p {
+      margin-top: 1.4em;
+    }
+
+    /* ── Contact section ──────────────────────── */
 
     .contact-section {
-      padding: 80px 0 100px;
+      padding: clamp(48px, 8vh, 80px) 0 clamp(64px, 12vh, 112px);
     }
 
     .contact-email-link {
@@ -241,16 +314,14 @@
     }
 
     .contact-note {
-      margin-top: 20px;
+      margin-top: 16px;
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.58rem;
+      font-size: 0.72rem;
       letter-spacing: 0.18em;
-      color: var(--ink-muted);
+      color: var(--ink-faint);
     }
 
-    /* ─────────────────────────────────────────────
-       FOOTER
-    ───────────────────────────────────────────── */
+    /* ── Footer ───────────────────────────────── */
 
     .site-footer {
       background: var(--board-bg);
@@ -282,7 +353,7 @@
       text-decoration: none;
       color: var(--amber-mid);
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.58rem;
+      font-size: 0.72rem;
       letter-spacing: 0.18em;
       transition: color 0.2s ease;
     }
@@ -295,13 +366,12 @@
       flex-shrink: 0;
     }
 
-    /* ─────────────────────────────────────────────
-       RESPONSIVE
-    ───────────────────────────────────────────── */
+    /* ── Responsive ───────────────────────────── */
 
     @media (max-width: 500px) {
       :root { --nav-h: 52px; }
-      .hero { min-height: 48vh; }
+      .hero { min-height: 44vh; }
+      .what-item { grid-template-columns: 36px 1fr; }
     }
   </style>
 </head>
@@ -319,20 +389,57 @@
   <!-- ── Hero ───────────────────────────────── -->
   <div class="hero">
     <div class="hero-tiles" id="heroTiles"></div>
-    <p class="hero-tagline" id="heroTagline">A guide to culture, organized by city.</p>
+    <p class="hero-tagline" id="heroTagline">There is a story in everything.</p>
   </div>
 
   <!-- ── Main content ───────────────────────── -->
   <main>
-    <div class="content">
+    <div class="page-content">
 
-      <!-- About -->
-      <section class="about-section">
-        <p class="section-label">About</p>
-        <div class="about-body">
-          <p>Conteur was made for a particular kind of attention — the kind that crosses time zones for an exhibition, that reads a city through its literature before landing, that moves through neighbourhoods at the pace of looking rather than ticking.</p>
-          <p>We curate what is worth your time: the shows drawing people across borders and the ones that haven't been found yet, the books that make a place legible, and the itineraries written for people who want to <em>see</em> rather than sightsee.</p>
-          <p>Each city on the board is chosen deliberately. New ones are added when they earn a place.</p>
+      <!-- Opening -->
+      <section class="opening-section">
+        <p class="opening-statement">In the brushstroke that took an artist thirty years to learn. In the city that shaped a writer's voice. In the museum room you almost walked past. In the stranger beside you who sees something entirely different in the same painting.</p>
+        <div class="opening-body">
+          <p>Conteur exists because we believe those stories deserve to be told, heard, and shared, together.</p>
+          <p>We are not a gallery. We are not an institution. We are a space for the genuinely curious, the casually interested, and everyone in between. You do not need a degree in art history. You do not need to already know the names. You just need to show up.</p>
+        </div>
+      </section>
+
+      <!-- What we do -->
+      <section class="what-section">
+        <p class="section-label">What we do</p>
+        <div class="what-list">
+
+          <div class="what-item">
+            <span class="what-num">01</span>
+            <p class="what-text"><span class="what-lead">We host art events, real ones,</span> where a group of people walk into an exhibition and actually talk about what they see. We bring the questions, the activities, the connection. You bring yourself.</p>
+          </div>
+
+          <div class="what-item">
+            <span class="what-num">02</span>
+            <p class="what-text"><span class="what-lead">We map the world's exhibitions</span> so you always know what is happening and where, whether you are at home or on the other side of the world.</p>
+          </div>
+
+          <div class="what-item">
+            <span class="what-num">03</span>
+            <p class="what-text"><span class="what-lead">We recommend books by the cities that made their authors.</span> Because where a story comes from is part of the story.</p>
+          </div>
+
+          <div class="what-item">
+            <span class="what-num">04</span>
+            <p class="what-text"><span class="what-lead">We build travel itineraries rooted in art and culture,</span> for the kind of trip where what you feel stays with you longer than what you photographed.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Why it matters -->
+      <section class="why-section">
+        <p class="section-label">Why it matters</p>
+        <p class="why-pullquote">Art has been kept at a distance for too long. Behind velvet ropes, academic language, and the quiet assumption that it is not for everyone.</p>
+        <div class="why-body">
+          <p>We think that is wrong.</p>
+          <p>Culture is not a privilege. It is a conversation. And the best conversations happen when more voices are in the room.</p>
         </div>
       </section>
 
@@ -359,55 +466,63 @@
 
   <script>
     // ── Split-flap hero ───────────────────────────
-    const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—0123456789';
-    const TARGET  = 'CONTEUR';
+    var CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—0123456789';
+    var TARGET  = 'CONTEUR';
 
-    const rchar = () => CHARSET[Math.floor(Math.random() * CHARSET.length)];
-    const wait  = ms  => new Promise(r => setTimeout(r, ms));
+    var rchar = function() { return CHARSET[Math.floor(Math.random() * CHARSET.length)]; };
+    var wait  = function(ms) { return new Promise(function(r) { setTimeout(r, ms); }); };
 
-    async function flipTo(tile, char) {
-      tile.classList.add('flipping');
-      await wait(70);
-      tile.textContent = char;
-      tile.classList.remove('is-space');
-      await wait(70);
-      tile.classList.remove('flipping');
+    function flipTo(tile, char) {
+      return new Promise(function(resolve) {
+        tile.classList.add('flipping');
+        setTimeout(function() {
+          tile.textContent = char;
+          tile.classList.remove('is-space');
+          setTimeout(function() {
+            tile.classList.remove('flipping');
+            resolve();
+          }, 70);
+        }, 70);
+      });
     }
 
-    async function animateTile(tile, target, startDelay) {
-      await wait(startDelay);
-      const cycles = 3 + Math.floor(Math.random() * 3);
-      for (let i = 0; i < cycles; i++) {
-        await flipTo(tile, rchar());
-        await wait(22 + Math.pow(i / cycles, 2) * 60);
-      }
-      await flipTo(tile, target);
+    function animateTile(tile, target, startDelay) {
+      return wait(startDelay).then(function() {
+        var cycles = 3 + Math.floor(Math.random() * 3);
+        var chain = Promise.resolve();
+        for (var i = 0; i < cycles; i++) {
+          (function(idx) {
+            chain = chain
+              .then(function() { return flipTo(tile, rchar()); })
+              .then(function() { return wait(22 + Math.pow(idx / cycles, 2) * 60); });
+          })(i);
+        }
+        return chain.then(function() { return flipTo(tile, target); });
+      });
     }
 
-    const heroTiles = document.getElementById('heroTiles');
-    const tagline   = document.getElementById('heroTagline');
+    var heroTiles = document.getElementById('heroTiles');
+    var tagline   = document.getElementById('heroTagline');
 
-    const tiles = Array.from(TARGET).map(() => {
-      const t = document.createElement('span');
+    var tiles = TARGET.split('').map(function() {
+      var t = document.createElement('span');
       t.className = 'tile is-space';
       t.textContent = ' ';
       heroTiles.appendChild(t);
       return t;
     });
 
-    (async () => {
-      await Promise.all(
-        tiles.map((tile, i) => animateTile(tile, TARGET[i], 300 + i * 52))
-      );
+    Promise.all(
+      tiles.map(function(tile, i) { return animateTile(tile, TARGET[i], 300 + i * 52); })
+    ).then(function() {
       tagline.classList.add('visible');
-    })();
+    });
 
-  
     // ── Transparent nav on scroll ─────────────────
-    (function () {
-      var _nav = document.querySelector('.nav');
-      window.addEventListener('scroll', function () {
-        _nav.classList.toggle('nav--scrolled', window.scrollY > 60);
+    (function() {
+      var nav = document.querySelector('.nav');
+      window.addEventListener('scroll', function() {
+        nav.classList.toggle('nav--scrolled', window.scrollY > 60);
       }, { passive: true });
     })();
   </script>

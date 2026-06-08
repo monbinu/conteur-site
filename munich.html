@@ -306,7 +306,6 @@
       color: var(--ink-muted);
       cursor: pointer;
       transition: all 0.18s;
-      min-height: 36px;
     }
 
     .filter-btn.active, .filter-btn:hover {
@@ -363,17 +362,16 @@
       text-transform: uppercase;
       padding: 3px 8px;
       border-radius: 2px;
-      white-space: nowrap;
     }
 
     .status-upcoming { background: #3a2e18; color: #c8a060; }
-    .status-view     { background: #2d4a2d; color: #7ec87e; }
-    .status-soon     { background: #4a2d2d; color: #c87e7e; }
-    .status-new      { background: #2d3a4a; color: #7eaac8; }
-    .status-past     { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .status-view { background: #2d4a2d; color: #7ec87e; }
+    .status-soon { background: #4a2d2d; color: #c87e7e; }
+    .status-new  { background: #2d3a4a; color: #7eaac8; }
+    .status-past { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
 
     .card-title {
-      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      font-size: clamp(1rem, 2vw, 1.35rem);
       font-weight: 400;
       line-height: 1.25;
       color: var(--ink);
@@ -396,7 +394,7 @@
 
     .card-desc {
       font-size: clamp(0.88rem, 1.3vw, 0.98rem);
-      line-height: 1.7;
+      line-height: 1.65;
       color: var(--ink-muted);
       font-style: italic;
     }
@@ -416,16 +414,18 @@
 
     .section-eyebrow {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
+      font-size: clamp(0.7rem, 0.82vw, 0.76rem);
+      letter-spacing: 0.32em;
       color: var(--amber-mid);
+      text-transform: uppercase;
+      margin-bottom: clamp(6px, 1vh, 10px);
     }
 
     .section-title {
-      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      font-size: clamp(1.2rem, 2.5vw, 1.8rem);
       font-weight: 300;
       color: var(--ink);
+      margin-bottom: clamp(20px, 3vh, 36px);
     }
 
     .book-grid {
@@ -455,7 +455,7 @@
     }
 
     .book-title {
-      font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+      font-size: clamp(1rem, 1.8vw, 1.25rem);
       font-weight: 400;
       line-height: 1.2;
       color: var(--ink);
@@ -463,7 +463,7 @@
 
     .book-author {
       font-style: italic;
-      font-size: clamp(0.88rem, 1.2vw, 0.98rem);
+      font-size: clamp(0.75rem, 1.2vw, 0.88rem);
       color: var(--ink-muted);
     }
 
@@ -501,7 +501,7 @@
 
     .coming-soon-text {
       font-style: italic;
-      font-size: clamp(1rem, 1.6vw, 1.15rem);
+      font-size: clamp(0.9rem, 1.6vw, 1.1rem);
       color: var(--ink-muted);
     }
 
@@ -523,8 +523,6 @@
       color: var(--ink-faint);
     }
 
-    /* ── Responsive ───────────────────────────── */
-
     @media (max-width: 500px) {
       :root { --nav-h: 52px; }
       .event-title { font-size: clamp(1.5rem, 8vw, 2.4rem); }
@@ -533,6 +531,7 @@
 </head>
 <body>
 
+  <!-- ── Nav ───────────────────────────────────── -->
   <nav class="nav">
     <a class="nav-wordmark" href="/index.html">Conteur</a>
     <div class="nav-links">
@@ -541,19 +540,23 @@
     </div>
   </nav>
 
+  <!-- ── Hero ──────────────────────────────────── -->
   <div class="hero">
     <a class="hero-back" href="/index.html">← All Cities</a>
     <div class="hero-tiles" id="heroTiles"></div>
     <p class="hero-sub">Munich &nbsp;·&nbsp; Germany</p>
   </div>
 
+  <!-- ── Tab bar ───────────────────────────────── -->
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="exhibitions">Exhibitions</button>
     <button class="tab-btn"        data-tab="books">Books</button>
     <button class="tab-btn"        data-tab="travel">Travel</button>
   </div>
 
-  <!-- EXHIBITIONS -->
+  <!-- ══════════════════════════════════════════
+       EXHIBITIONS
+  ══════════════════════════════════════════ -->
   <div class="section active" id="tab-exhibitions">
 
     <!-- Featured Event -->
@@ -582,7 +585,9 @@
 
   </div>
 
-  <!-- BOOKS -->
+  <!-- ══════════════════════════════════════════
+       BOOKS
+  ══════════════════════════════════════════ -->
   <div class="section" id="tab-books">
     <div class="books-section">
       <div class="books-header">
@@ -612,16 +617,22 @@
     </div>
   </div>
 
-  <!-- TRAVEL -->
+  <!-- ══════════════════════════════════════════
+       TRAVEL
+  ══════════════════════════════════════════ -->
   <div class="section" id="tab-travel">
     <div class="travel-section">
       <div class="coming-soon">
         <span class="coming-soon-label">Coming Soon</span>
-        <p class="coming-soon-text">Itineraries for Munich are being written.</p>
+        <p class="coming-soon-text">
+          A curated itinerary for Munich is in the works —<br>
+          neighbourhoods, galleries, Englischer Garten, and places worth the detour.
+        </p>
       </div>
     </div>
   </div>
 
+  <!-- ── Footer ────────────────────────────────── -->
   <footer class="page-footer">
     <span class="footer-text">Conteur · Munich</span>
     <span class="footer-text">Updated June 2026</span>
@@ -632,173 +643,197 @@
        FLIP ANIMATION
     ═══════════════════════════════════════════ */
 
-    const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—0123456789';
-    const CITY_NAME = 'MUNICH';
-    const wait  = ms => new Promise(r => setTimeout(r, ms));
-    const rchar = () => CHARSET[Math.floor(Math.random() * CHARSET.length)];
+    var CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—0123456789';
+    var wait    = function(ms) { return new Promise(function(r) { setTimeout(r, ms); }); };
+    var rchar   = function() { return CHARSET[Math.floor(Math.random() * CHARSET.length)]; };
 
     function buildTiles(name) {
-      const wrap = document.getElementById('heroTiles');
+      var wrap = document.getElementById('heroTiles');
       wrap.innerHTML = '';
-      return name.split('').map(ch => {
-        const t = document.createElement('span');
-        t.className = 'tile' + (ch === ' ' ? ' is-space' : '');
-        t.textContent = ch === ' ' ? ' ' : ch;
+      return name.split('').map(function(ch) {
+        var t = document.createElement('span');
+        t.className = ch === ' ' ? 'tile is-space' : 'tile';
+        t.textContent = ch === ' ' ? ' ' : ch;
         wrap.appendChild(t);
         return t;
       });
     }
 
-    async function flipTo(tile, char) {
-      tile.classList.add('flipping');
-      await wait(65);
-      tile.textContent = char === ' ' ? ' ' : char;
-      tile.classList.remove('is-space');
-      await wait(65);
-      tile.classList.remove('flipping');
+    function flipTo(tile, char) {
+      return new Promise(function(resolve) {
+        tile.classList.add('flipping');
+        setTimeout(function() {
+          if (char === ' ') {
+            tile.textContent = ' ';
+            tile.classList.add('is-space');
+          } else {
+            tile.textContent = char;
+            tile.classList.remove('is-space');
+          }
+          setTimeout(function() {
+            tile.classList.remove('flipping');
+            resolve();
+          }, 65);
+        }, 65);
+      });
     }
 
-    async function animateTile(tile, target, delay) {
-      await wait(delay);
-      const cycles = 3 + Math.floor(Math.random() * 3);
-      for (let i = 0; i < cycles; i++) {
-        await flipTo(tile, rchar());
-        await wait(20 + Math.pow(i / cycles, 2) * 55);
-      }
-      await flipTo(tile, target);
+    function animateTile(tile, target, delay) {
+      return wait(delay).then(function() {
+        var cycles = 3 + Math.floor(Math.random() * 3);
+        var chain = Promise.resolve();
+        for (var i = 0; i < cycles; i++) {
+          (function(idx) {
+            chain = chain.then(function() {
+              return flipTo(tile, rchar());
+            }).then(function() {
+              return wait(22 + Math.pow(idx / cycles, 2) * 50);
+            });
+          })(i);
+        }
+        return chain.then(function() {
+          return flipTo(tile, target);
+        });
+      });
     }
 
-    (async () => {
-      const tiles = buildTiles(CITY_NAME);
-      await Promise.all(tiles.map((t, i) => animateTile(t, CITY_NAME[i], 300 + i * 55)));
+    (function() {
+      var name  = 'MUNICH';
+      var tiles = buildTiles(name);
+      setTimeout(function() {
+        Promise.all(tiles.map(function(t, i) {
+          return animateTile(t, name[i], i * 38);
+        }));
+      }, 300);
     })();
 
     /* ═══════════════════════════════════════════
-       EXHIBITIONS
+       EXHIBITION DATA
     ═══════════════════════════════════════════ */
 
-    const STATUS_LABELS = {
-      upcoming: 'Upcoming',
-      view:     'On View',
-      new:      'Just Opened',
-      soon:     'Closing Soon',
-      past:     'Past',
-    };
-
-    const EXHIBITIONS = [
+    var EXHIBITIONS = [
       {
         title:  'Colour, Scale, and Gesture',
-        subtitle: 'Works from the Brandhorst Collection',
         venue:  'Museum Brandhorst',
         type:   'museum',
-        status: 'view',
         dates:  'Permanent collection',
-        desc:   'The Brandhorst's extraordinary holdings span late twentieth-century and contemporary art, with exceptional depth in Cy Twombly, Andy Warhol, and Sigmar Polke.',
-        link:   'https://www.museum-brandhorst.de',
+        status: 'view',
+        desc:   'The Brandhorst\'s extraordinary holdings span late twentieth-century and contemporary art, with exceptional depth in Cy Twombly, Andy Warhol, and Sigmar Polke.',
+        url:    'https://www.museum-brandhorst.de',
       },
       {
         title:  'Kandinsky: Toward the Absolute',
-        subtitle: 'Der Blaue Reiter at the Lenbachhaus',
         venue:  'Städtische Galerie im Lenbachhaus',
         type:   'museum',
-        status: 'view',
         dates:  'Permanent collection',
-        desc:   'The world's largest collection of works by Wassily Kandinsky, held in the movement's spiritual home. The definitive site for understanding abstraction's origins.',
-        link:   'https://www.lenbachhaus.de',
+        status: 'view',
+        desc:   'The world\'s largest collection of works by Wassily Kandinsky, held in the movement\'s spiritual home. The definitive site for understanding abstraction\'s origins.',
+        url:    'https://www.lenbachhaus.de',
       },
       {
         title:  'Monica Bonvicini: Never Again',
         venue:  'Haus der Kunst',
         type:   'museum',
+        dates:  'Apr 12 — Sep 7, 2026',
         status: 'view',
-        dates:  'Apr 12 – Sep 7, 2026',
-        desc:   'A major survey of the Berlin-based artist's three-decade investigation into architecture, power, and gender — spanning installation, neon, and large-scale sculpture.',
-        link:   'https://www.hausderkunst.de',
+        desc:   'A major survey of the Berlin-based artist\'s three-decade investigation into architecture, power, and gender — spanning installation, neon, and large-scale sculpture.',
+        url:    'https://www.hausderkunst.de',
       },
       {
         title:  'Material Futures',
-        subtitle: 'German Design Now',
         venue:  'Pinakothek der Moderne',
         type:   'museum',
+        dates:  'Mar 8 — Sep 28, 2026',
         status: 'view',
-        dates:  'Mar 8 – Sep 28, 2026',
         desc:   'A sweeping survey of German design practice in the twenty-first century — from industrial objects and experimental typography to speculative and ecological futures.',
-        link:   'https://www.pinakothek-der-moderne.de',
+        url:    'https://www.pinakothek-der-moderne.de',
       },
       {
         title:  'Harun Farocki: Parallel',
         venue:  'Kunsthalle München',
         type:   'museum',
+        dates:  'May 3 — Jul 13, 2026',
         status: 'soon',
-        dates:  'May 3 – Jul 13, 2026',
-        desc:   'A focused presentation of Farocki's landmark series examining video game imagery as a new form of industrial image production — and what it reveals about seeing itself.',
-        link:   'https://www.kunsthallemuenchen.de',
+        desc:   'A focused presentation of Farocki\'s landmark series examining video game imagery as a new form of industrial image production — and what it reveals about seeing itself.',
+        url:    'https://www.kunsthallemuenchen.de',
       },
       {
         title:  'Sturtevant: The Razzle Dazzle of Thinking',
         venue:  'Sammlung Goetz',
         type:   'gallery',
+        dates:  'Jun 1 — Nov 22, 2026',
         status: 'view',
-        dates:  'Jun 1 – Nov 22, 2026',
-        desc:   'An intimate presentation of Sturtevant's radical practice of repetition and appropriation, drawn from Ingvild Goetz's private collection.',
-        link:   'https://www.sammlung-goetz.de',
+        desc:   'An intimate presentation of Sturtevant\'s radical practice of repetition and appropriation, drawn from Ingvild Goetz\'s private collection.',
+        url:    'https://www.sammlung-goetz.de',
       },
     ];
 
-    const exhGrid = document.getElementById('exhGrid');
+    var STATUS_LABELS = {
+      upcoming: 'Upcoming',
+      view: 'On View',
+      new:  'Just Opened',
+      soon: 'Closing Soon',
+      past: 'Past',
+    };
 
-    function renderExhibitions(filter = 'all') {
-      const filtered = filter === 'all'
-        ? EXHIBITIONS
-        : EXHIBITIONS.filter(e => e.type === filter);
-
+    function renderExhibitions(filter) {
+      filter = filter || 'all';
+      var exhGrid = document.getElementById('exhGrid');
       exhGrid.innerHTML = '';
-      filtered.forEach(ex => {
-        const a = document.createElement('a');
-        a.className = 'exh-card';
-        a.href = ex.link || '#';
-        if (ex.link) { a.target = '_blank'; a.rel = 'noopener'; }
 
-        a.innerHTML = `
-          <div class="card-top">
-            <span class="card-type">${ex.type}</span>
-            <span class="card-status status-${ex.status}">${STATUS_LABELS[ex.status]}</span>
-          </div>
-          <h3 class="card-title">${ex.title}</h3>
-          <p class="card-venue">${ex.venue}</p>
-          <p class="card-desc">${ex.desc}</p>
-          <p class="card-dates">${ex.dates}</p>
-        `;
+      var filtered = filter === 'all'
+        ? EXHIBITIONS
+        : EXHIBITIONS.filter(function(e) { return e.type === filter; });
+
+      filtered.forEach(function(e) {
+        var a = document.createElement('a');
+        a.className = 'exh-card';
+        a.href      = e.url;
+        a.target    = '_blank';
+        a.rel       = 'noopener';
+
+        a.innerHTML =
+          '<div class="card-top">' +
+            '<span class="card-type">' + e.type + '</span>' +
+            '<span class="card-status status-' + e.status + '">' + STATUS_LABELS[e.status] + '</span>' +
+          '</div>' +
+          '<h3 class="card-title">' + e.title + '</h3>' +
+          '<p class="card-venue">' + e.venue + '</p>' +
+          '<p class="card-desc">' + e.desc + '</p>' +
+          '<p class="card-dates">' + e.dates + '</p>';
+
         exhGrid.appendChild(a);
       });
     }
 
-    renderExhibitions();
+    renderExhibitions('all');
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
         renderExhibitions(btn.dataset.filter);
       });
     });
 
-    /* ── Tabs ─────────────────────────────────── */
+    /* ═══════════════════════════════════════════
+       TABS
+    ═══════════════════════════════════════════ */
 
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+        document.querySelectorAll('.section').forEach(function(s) { s.classList.remove('active'); });
         btn.classList.add('active');
-        document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
       });
     });
 
     /* ── Transparent nav on scroll ─────────────── */
-    (function () {
-      var _nav = document.querySelector('.nav');
-      window.addEventListener('scroll', function () {
-        _nav.classList.toggle('nav--scrolled', window.scrollY > 60);
+    (function() {
+      var nav = document.querySelector('.nav');
+      window.addEventListener('scroll', function() {
+        nav.classList.toggle('nav--scrolled', window.scrollY > 60);
       }, { passive: true });
     })();
   </script>
