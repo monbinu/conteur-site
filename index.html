@@ -152,24 +152,6 @@
       box-shadow: 0 0 5px var(--amber-mid);
     }
 
-    /* column header */
-    .board-cols {
-      flex-shrink: 0;
-      padding: 0 clamp(24px, 5vw, 60px);
-      height: clamp(28px, 3.5vh, 38px);
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid var(--board-border);
-    }
-
-    .col-label {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.42rem, 0.7vw, 0.52rem);
-      letter-spacing: 0.28em;
-      color: var(--amber-mid);
-      text-transform: uppercase;
-    }
-
     /* ── Status row ── */
     .board-status {
       flex-shrink: 0;
@@ -349,10 +331,6 @@
         <div class="board-light"></div>
         <div class="board-light"></div>
       </div>
-    </div>
-
-    <div class="board-cols">
-      <span class="col-label">Destination</span>
     </div>
 
     <div class="board-status">

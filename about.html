@@ -297,21 +297,33 @@
     }
 
     .contact-email-link {
-      display: inline-block;
-      font-size: clamp(1.1rem, 2vw, 1.4rem);
-      font-weight: 300;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
       color: var(--ink);
       text-decoration: none;
-      border-bottom: 1px solid rgba(46,40,32,0.3);
-      padding-bottom: 3px;
-      transition: border-color 0.2s ease, color 0.2s ease;
-      letter-spacing: 0.01em;
+      transition: color 0.2s ease;
     }
 
-    .contact-email-link:hover {
-      color: var(--ink-muted);
-      border-bottom-color: var(--ink-muted);
+    .contact-email-link:hover { color: var(--ink-muted); }
+
+    .contact-email-link svg {
+      width: clamp(22px, 3vw, 28px);
+      height: clamp(22px, 3vw, 28px);
+      flex-shrink: 0;
     }
+
+    .contact-email-link span {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(0.72rem, 1vw, 0.82rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(46,40,32,0.25);
+      padding-bottom: 2px;
+      transition: border-color 0.2s;
+    }
+
+    .contact-email-link:hover span { border-bottom-color: var(--ink-muted); }
 
     .contact-note {
       margin-top: 16px;
@@ -446,7 +458,13 @@
       <!-- Contact -->
       <section class="contact-section" id="contact">
         <p class="section-label">Contact</p>
-        <a class="contact-email-link" href="mailto:itsmikaylakim@gmail.com">itsmikaylakim@gmail.com</a>
+        <a class="contact-email-link" href="mailto:itsmikaylakim@gmail.com" aria-label="Send an email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="M2 7l10 7 10-7"/>
+          </svg>
+          <span>Send a message</span>
+        </a>
         <p class="contact-note">We read everything.</p>
       </section>
 
