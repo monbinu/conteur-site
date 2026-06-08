@@ -45,7 +45,7 @@
       justify-content: space-between;
       padding: 0 clamp(24px, 5vw, 60px);
       z-index: 100;
-      background: var(--cream);
+      background: transparent;
       opacity: 0;
       animation: fadeIn 0.7s ease forwards 0.1s;
     }
@@ -57,7 +57,7 @@
       left: clamp(24px, 5vw, 60px);
       right: clamp(24px, 5vw, 60px);
       height: 1px;
-      background: rgba(46, 40, 32, 0.12);
+      background: rgba(200,160,96,0.15);
     }
 
     .nav-wordmark {
@@ -66,7 +66,7 @@
       letter-spacing: 0.38em;
       text-indent: 0.38em;
       text-transform: uppercase;
-      color: var(--ink);
+      color: var(--amber);
       text-decoration: none;
     }
 
@@ -79,7 +79,7 @@
     .nav-link {
       font-size: clamp(0.65rem, 1.1vw, 0.78rem);
       letter-spacing: 0.18em;
-      color: var(--ink-muted);
+      color: var(--amber-mid);
       text-decoration: none;
       text-transform: uppercase;
       transition: color 0.2s ease;
@@ -91,13 +91,13 @@
       position: absolute;
       bottom: -2px; left: 0; right: 0;
       height: 1px;
-      background: var(--ink);
+      background: var(--amber);
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 0.25s ease;
     }
 
-    .nav-link:hover { color: var(--ink); }
+    .nav-link:hover { color: var(--amber); }
     .nav-link:hover::after { transform: scaleX(1); }
 
     /* ─────────────────────────────────────────────
@@ -303,8 +303,8 @@
   <nav class="nav">
     <a class="nav-wordmark" href="/">Conteur</a>
     <div class="nav-links">
-      <a class="nav-link" href="/about">About Us</a>
-      <a class="nav-link" href="/contact">Contact</a>
+      <a class="nav-link" href="/about.html">About</a>
+      <a class="nav-link" href="/about.html#contact">Contact</a>
     </div>
   </nav>
 

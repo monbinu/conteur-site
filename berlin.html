@@ -43,8 +43,11 @@
       justify-content: space-between;
       padding: 0 clamp(24px, 5vw, 60px);
       z-index: 100;
-      background: var(--cream);
+      background: transparent;
+      transition: background 0.35s ease;
     }
+
+    .nav--scrolled { background: var(--board-bg); }
 
     .nav::after {
       content: '';
@@ -53,7 +56,7 @@
       left: clamp(24px, 5vw, 60px);
       right: clamp(24px, 5vw, 60px);
       height: 1px;
-      background: rgba(46,40,32,0.12);
+      background: rgba(200,160,96,0.15);
     }
 
     .nav-wordmark {
@@ -62,7 +65,7 @@
       letter-spacing: 0.38em;
       text-indent: 0.38em;
       text-transform: uppercase;
-      color: var(--ink);
+      color: var(--amber);
       text-decoration: none;
     }
 
@@ -71,7 +74,7 @@
     .nav-link {
       font-size: clamp(0.62rem, 1vw, 0.75rem);
       letter-spacing: 0.18em;
-      color: var(--ink-muted);
+      color: var(--amber-mid);
       text-decoration: none;
       text-transform: uppercase;
       transition: color 0.2s;
@@ -83,21 +86,20 @@
       position: absolute;
       bottom: -2px; left: 0; right: 0;
       height: 1px;
-      background: var(--ink);
+      background: var(--amber);
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 0.25s ease;
     }
 
-    .nav-link:hover { color: var(--ink); }
+    .nav-link:hover { color: var(--amber); }
     .nav-link:hover::after { transform: scaleX(1); }
 
     /* ── Hero ─────────────────────────────────── */
 
     .hero {
-      margin-top: var(--nav-h);
       background: var(--board-deep);
-      padding: clamp(36px, 6vh, 64px) clamp(24px, 5vw, 60px);
+      padding: calc(var(--nav-h) + clamp(36px, 6vh, 64px)) clamp(24px, 5vw, 60px) clamp(36px, 6vh, 64px);
       display: flex;
       flex-direction: column;
       gap: clamp(12px, 2vh, 20px);
@@ -450,8 +452,8 @@
   <nav class="nav">
     <a class="nav-wordmark" href="/index.html">Conteur</a>
     <div class="nav-links">
-      <a class="nav-link" href="/about">About Us</a>
-      <a class="nav-link" href="/contact">Contact</a>
+      <a class="nav-link" href="/about.html">About</a>
+      <a class="nav-link" href="/about.html#contact">Contact</a>
     </div>
   </nav>
 
@@ -686,7 +688,16 @@
         document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
       });
     });
-  </script>
+  
+    // ── Transparent nav on scroll ─────────────────
+    (function () {
+      var _nav = document.querySelector('.nav');
+      window.addEventListener('scroll', function () {
+        _nav.classList.toggle('nav--scrolled', window.scrollY > 60);
+      }, { passive: true });
+    })();
+  
 
 </body>
 </html>
+</script>

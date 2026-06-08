@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Conteur</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream:        #f4efe6;
+      --ink:          #2e2820;
+      --ink-muted:    #8a7e70;
+      --ink-faint:    rgba(46,40,32,0.3);
+      --board-bg:     #1a1714;
+      --board-deep:   #111010;
+      --board-border: #2c2820;
+      --tile-bg:      #232018;
+      --amber:        #c8a060;
+      --amber-mid:    #7a5c34;
+      --amber-dim:    #3d2e1a;
+      --nav-h:        60px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--ink);
+    }
+
+    /* ─────────────────────────────────────────────
+       NAV
+    ───────────────────────────────────────────── */
+
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 clamp(24px, 5vw, 60px);
+      z-index: 100;
+      background: transparent;
+      transition: background 0.35s ease;
+    }
+
+    .nav--scrolled { background: var(--board-bg); }
+
+    .nav::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: clamp(24px, 5vw, 60px);
+      right: clamp(24px, 5vw, 60px);
+      height: 1px;
+      background: rgba(200,160,96,0.15);
+    }
+
+    .nav-wordmark {
+      font-weight: 300;
+      font-size: clamp(0.68rem, 1.1vw, 0.84rem);
+      letter-spacing: 0.38em;
+      text-indent: 0.38em;
+      text-transform: uppercase;
+      color: var(--amber);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(20px, 3vw, 36px);
+    }
+
+    .nav-link {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(0.58rem, 0.9vw, 0.7rem);
+      letter-spacing: 0.18em;
+      color: var(--amber-mid);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 0; right: 0;
+      height: 1px;
+      background: var(--amber);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-link:hover { color: var(--amber); }
+    .nav-link:hover::after { transform: scaleX(1); }
+
+    /* ─────────────────────────────────────────────
+       HERO
+    ───────────────────────────────────────────── */
+
+    .hero {
+      min-height: 56vh;
+      background: var(--board-bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: calc(var(--nav-h) + 48px) clamp(24px, 5vw, 60px) 64px;
+      border-bottom: 1px solid var(--board-border);
+    }
+
+    .hero-tiles {
+      display: flex;
+      gap: clamp(3px, 0.5vw, 7px);
+      perspective: 800px;
+      margin-bottom: 32px;
+    }
+
+    .tile {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width:  clamp(2rem, 4.5vw, 3.8rem);
+      height: clamp(3.2rem, 9vh, 6rem);
+      background: var(--tile-bg);
+      color: var(--amber);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size:   clamp(1.2rem, 2.8vw, 2.4rem);
+      font-weight: 500;
+      border-radius: 3px;
+      user-select: none;
+      position: relative;
+      transform-origin: center;
+    }
+
+    .tile::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 50%;
+      height: 1px;
+      background: rgba(0,0,0,0.4);
+      pointer-events: none;
+    }
+
+    .tile.is-space { color: transparent; }
+    .tile.flipping { animation: tileFlip 140ms ease-in-out; }
+
+    @keyframes tileFlip {
+      0%   { transform: rotateX(0deg);   opacity: 1;   }
+      42%  { transform: rotateX(-88deg); opacity: 0.5; }
+      58%  { transform: rotateX( 88deg); opacity: 0.5; }
+      100% { transform: rotateX(0deg);   opacity: 1;   }
+    }
+
+    .hero-tagline {
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1rem, 1.8vw, 1.25rem);
+      color: var(--amber-mid);
+      letter-spacing: 0.05em;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .hero-tagline.visible { opacity: 1; }
+
+    /* ─────────────────────────────────────────────
+       CONTENT WRAPPER
+    ───────────────────────────────────────────── */
+
+    .content {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 clamp(24px, 5vw, 60px);
+    }
+
+    /* ─────────────────────────────────────────────
+       ABOUT SECTION
+    ───────────────────────────────────────────── */
+
+    .about-section {
+      padding: 80px 0 72px;
+      border-bottom: 1px solid rgba(46,40,32,0.1);
+    }
+
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.34em;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    .about-body {
+      font-size: clamp(1.05rem, 1.9vw, 1.3rem);
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--ink);
+    }
+
+    .about-body p + p { margin-top: 1.5em; }
+
+    .about-body em {
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    /* ─────────────────────────────────────────────
+       CONTACT SECTION
+    ───────────────────────────────────────────── */
+
+    .contact-section {
+      padding: 80px 0 100px;
+    }
+
+    .contact-email-link {
+      display: inline-block;
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 300;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(46,40,32,0.3);
+      padding-bottom: 3px;
+      transition: border-color 0.2s ease, color 0.2s ease;
+      letter-spacing: 0.01em;
+    }
+
+    .contact-email-link:hover {
+      color: var(--ink-muted);
+      border-bottom-color: var(--ink-muted);
+    }
+
+    .contact-note {
+      margin-top: 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      color: var(--ink-muted);
+    }
+
+    /* ─────────────────────────────────────────────
+       FOOTER
+    ───────────────────────────────────────────── */
+
+    .site-footer {
+      background: var(--board-bg);
+      border-top: 1px solid var(--board-border);
+      padding: 36px clamp(24px, 5vw, 60px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-wordmark {
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--amber-mid);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .footer-wordmark:hover { color: var(--amber); }
+
+    .footer-ig {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--amber-mid);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      transition: color 0.2s ease;
+    }
+
+    .footer-ig:hover { color: var(--amber); }
+
+    .footer-ig svg {
+      width: 13px; height: 13px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+
+    /* ─────────────────────────────────────────────
+       RESPONSIVE
+    ───────────────────────────────────────────── */
+
+    @media (max-width: 500px) {
+      :root { --nav-h: 52px; }
+      .hero { min-height: 48vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ────────────────────────────────── -->
+  <nav class="nav">
+    <a class="nav-wordmark" href="/index.html">Conteur</a>
+    <div class="nav-links">
+      <a class="nav-link" href="/about.html">About</a>
+      <a class="nav-link" href="/about.html#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- ── Hero ───────────────────────────────── -->
+  <div class="hero">
+    <div class="hero-tiles" id="heroTiles"></div>
+    <p class="hero-tagline" id="heroTagline">A guide to culture, organized by city.</p>
+  </div>
+
+  <!-- ── Main content ───────────────────────── -->
+  <main>
+    <div class="content">
+
+      <!-- About -->
+      <section class="about-section">
+        <p class="section-label">About</p>
+        <div class="about-body">
+          <p>Conteur was made for a particular kind of attention — the kind that crosses time zones for an exhibition, that reads a city through its literature before landing, that moves through neighbourhoods at the pace of looking rather than ticking.</p>
+          <p>We curate what is worth your time: the shows drawing people across borders and the ones that haven't been found yet, the books that make a place legible, and the itineraries written for people who want to <em>see</em> rather than sightsee.</p>
+          <p>Each city on the board is chosen deliberately. New ones are added when they earn a place.</p>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section class="contact-section" id="contact">
+        <p class="section-label">Contact</p>
+        <a class="contact-email-link" href="mailto:itsmikaylakim@gmail.com">itsmikaylakim@gmail.com</a>
+        <p class="contact-note">We read everything.</p>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────── -->
+  <footer class="site-footer">
+    <a class="footer-wordmark" href="/index.html">Conteur</a>
+    <a class="footer-ig" href="https://instagram.com/conteur.art" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+      </svg>
+      @conteur.art
+    </a>
+  </footer>
+
+  <script>
+    // ── Split-flap hero ───────────────────────────
+    const CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—0123456789';
+    const TARGET  = 'CONTEUR';
+
+    const rchar = () => CHARSET[Math.floor(Math.random() * CHARSET.length)];
+    const wait  = ms  => new Promise(r => setTimeout(r, ms));
+
+    async function flipTo(tile, char) {
+      tile.classList.add('flipping');
+      await wait(70);
+      tile.textContent = char;
+      tile.classList.remove('is-space');
+      await wait(70);
+      tile.classList.remove('flipping');
+    }
+
+    async function animateTile(tile, target, startDelay) {
+      await wait(startDelay);
+      const cycles = 3 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < cycles; i++) {
+        await flipTo(tile, rchar());
+        await wait(22 + Math.pow(i / cycles, 2) * 60);
+      }
+      await flipTo(tile, target);
+    }
+
+    const heroTiles = document.getElementById('heroTiles');
+    const tagline   = document.getElementById('heroTagline');
+
+    const tiles = Array.from(TARGET).map(() => {
+      const t = document.createElement('span');
+      t.className = 'tile is-space';
+      t.textContent = ' ';
+      heroTiles.appendChild(t);
+      return t;
+    });
+
+    (async () => {
+      await Promise.all(
+        tiles.map((tile, i) => animateTile(tile, TARGET[i], 300 + i * 52))
+      );
+      tagline.classList.add('visible');
+    })();
+
+  
+    // ── Transparent nav on scroll ─────────────────
+    (function () {
+      var _nav = document.querySelector('.nav');
+      window.addEventListener('scroll', function () {
+        _nav.classList.toggle('nav--scrolled', window.scrollY > 60);
+      }, { passive: true });
+    })();
+  
+
+</body>
+</html>
+</script>
