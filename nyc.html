@@ -24,6 +24,7 @@
       --amber-mid:    #7a5c34;
       --amber-dim:    #3d2e1a;
       --nav-h:        60px;
+      --tab-h:        52px;
       --status-view:      #2d4a2d;
       --status-view-text: #7ec87e;
       --status-soon:      #4a2d2d;
@@ -495,65 +496,63 @@
       font-style: italic;
     }
 
-    /* ── Travel section ───────────────────────── */
+    /* ── Travel layout ────────────────────────── */
 
-    .travel-map-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 7;
-      background: var(--board-bg);
-      border-bottom: 1px solid var(--board-border);
+    /* Mobile view toggle (hidden on desktop) */
+    .travel-view-toggle {
+      display: none;
+    }
+
+    /* Desktop: side-by-side */
+    .travel-layout {
+      display: grid;
+      grid-template-columns: 46% 54%;
+    }
+
+    /* Map panel — sticky on desktop */
+    .travel-map-panel {
+      position: sticky;
+      top: calc(var(--nav-h) + var(--tab-h));
+      height: calc(100vh - var(--nav-h) - var(--tab-h));
+      align-self: start;
       overflow: hidden;
+      background: var(--board-bg);
+      border-right: 1px solid rgba(46,40,32,0.1);
     }
 
-    @media (max-width: 600px) { .travel-map-wrap { aspect-ratio: 4 / 3; } }
-
-    .travel-map-wrap iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-      filter: grayscale(0.2) contrast(1.05);
+    .travel-map-panel iframe {
+      width: 100%; height: 100%;
+      border: 0; display: block;
+      filter: grayscale(0.12) contrast(1.04);
     }
 
-    .travel-map-placeholder {
-      position: absolute;
-      inset: 0;
+    /* List panel */
+    .travel-list-panel {
+      min-height: calc(100vh - var(--nav-h) - var(--tab-h));
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      color: var(--amber-mid);
     }
 
-    .travel-map-placeholder p {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-    }
-
-    /* ── Filter + grid ────────────────────────── */
+    /* ── Filter bar ───────────────────────────── */
 
     .place-filter-bar {
-      padding: clamp(14px, 2vh, 22px) clamp(24px, 5vw, 60px);
+      padding: clamp(12px, 1.8vh, 18px) clamp(20px, 2.5vw, 32px);
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
       border-bottom: 1px solid rgba(46,40,32,0.08);
       background: var(--cream);
       position: sticky;
-      top: var(--nav-h);
+      top: calc(var(--nav-h) + var(--tab-h));
       z-index: 80;
     }
 
     .place-filter-btn {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.72rem, 0.85vw, 0.78rem);
+      font-size: clamp(0.66rem, 0.82vw, 0.74rem);
       letter-spacing: 0.18em;
       text-transform: uppercase;
-      padding: 7px 14px;
+      padding: 6px 12px;
       border: 1px solid rgba(46,40,32,0.2);
       border-radius: 2px;
       background: none;
@@ -569,103 +568,144 @@
       border-color: var(--ink);
     }
 
-    /* ── Split-card grid ──────────────────────── */
+    /* ── Place rows (list view) ───────────────── */
 
-    .place-grid {
+    .place-list { flex: 1; }
+
+    .place-row {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    @media (max-width: 900px) { .place-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (max-width: 540px) { .place-grid { grid-template-columns: 1fr; } }
-
-    .place-card {
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid rgba(46,40,32,0.1);
-      border-bottom: 1px solid rgba(46,40,32,0.1);
+      grid-template-columns: auto 1fr auto;
+      align-items: start;
+      gap: 0 14px;
+      padding: clamp(14px, 2.2vh, 20px) clamp(20px, 2.5vw, 32px);
+      border-bottom: 1px solid rgba(46,40,32,0.08);
       text-decoration: none;
       color: inherit;
-      transition: opacity 0.18s;
+      transition: background 0.15s;
     }
 
-    .place-card:hover { opacity: 0.82; }
+    .place-row:hover { background: rgba(46,40,32,0.025); }
 
-    /* dark upper: category + name */
-    .place-card-head {
-      background: var(--board-bg);
-      padding: clamp(20px, 3.5vh, 32px) clamp(18px, 2.5vw, 28px);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex: 0 0 auto;
-    }
-
-    .place-chip {
+    .place-row-chip {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.66rem;
-      letter-spacing: 0.22em;
+      font-size: 0.56rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--amber-mid);
-    }
-
-    .place-name {
-      font-size: clamp(1.15rem, 2vw, 1.55rem);
-      font-weight: 300;
-      line-height: 1.15;
-      color: var(--amber);
-      letter-spacing: 0.01em;
-    }
-
-    /* cream lower: note + address + link */
-    .place-card-body {
-      background: var(--cream);
-      padding: clamp(16px, 2.5vh, 24px) clamp(18px, 2.5vw, 28px);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      flex: 1;
-    }
-
-    .place-note {
-      font-size: clamp(0.95rem, 1.4vw, 1.05rem);
-      font-style: italic;
-      line-height: 1.72;
-      color: var(--ink-muted);
-      flex: 1;
-    }
-
-    .place-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 12px;
-      padding-top: 10px;
-      border-top: 1px solid rgba(46,40,32,0.08);
-    }
-
-    .place-address {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.6rem, 0.72vw, 0.68rem);
-      letter-spacing: 0.1em;
-      color: var(--ink-faint);
-      text-transform: uppercase;
-      line-height: 1.5;
-    }
-
-    .place-link {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--ink-faint);
-      text-decoration: none;
+      background: rgba(122,92,52,0.1);
+      border: 1px solid rgba(122,92,52,0.22);
+      padding: 3px 7px;
+      border-radius: 2px;
       white-space: nowrap;
-      flex-shrink: 0;
-      transition: color 0.2s;
+      margin-top: 4px;
     }
 
-    .place-link:hover { color: var(--ink-muted); }
+    .place-row-main { min-width: 0; }
+
+    .place-row-name {
+      font-size: clamp(1rem, 1.5vw, 1.15rem);
+      font-weight: 300;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+
+    .place-row-note {
+      font-size: clamp(0.82rem, 1vw, 0.92rem);
+      font-style: italic;
+      color: var(--ink-muted);
+      line-height: 1.55;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .place-row-arrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--ink-faint);
+      flex-shrink: 0;
+      margin-top: 4px;
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .place-row:hover .place-row-arrow {
+      color: var(--ink-muted);
+      transform: translateX(2px);
+    }
+
+    /* ── Mobile ───────────────────────────────── */
+
+    @media (max-width: 860px) {
+
+      .travel-layout {
+        display: block;
+      }
+
+      /* View toggle bar */
+      .travel-view-toggle {
+        display: flex;
+        border-bottom: 1px solid rgba(46,40,32,0.1);
+        background: var(--cream);
+        position: sticky;
+        top: calc(var(--nav-h) + var(--tab-h));
+        z-index: 88;
+      }
+
+      .view-btn {
+        flex: 1;
+        padding: 11px 0;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: var(--ink-faint);
+        cursor: pointer;
+        transition: color 0.2s, border-color 0.2s;
+      }
+
+      .view-btn.active {
+        color: var(--ink);
+        border-bottom-color: var(--ink);
+      }
+
+      /* Map panel: hidden by default, shown when .show-map */
+      .travel-map-panel {
+        position: static;
+        height: 58vw;
+        min-height: 240px;
+        max-height: 400px;
+        display: none;
+        border-right: none;
+        border-bottom: 1px solid rgba(46,40,32,0.1);
+      }
+
+      .travel-layout.show-map .travel-map-panel  { display: block; }
+      .travel-layout.show-map .travel-list-panel { display: none;  }
+
+      /* Filter bar sticks below nav + tab + toggle (~42px) */
+      .place-filter-bar {
+        top: calc(var(--nav-h) + var(--tab-h) + 42px);
+      }
+
+      /* Notes can wrap on mobile */
+      .place-row-note {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+    }
+
+    @media (max-width: 480px) {
+      /* Very small screens: hide note, just name + chip + arrow */
+      .place-row-note { display: none; }
+      .place-filter-bar { top: calc(var(--nav-h) + var(--tab-h) + 40px); }
+    }
 
     /* ── Page footer ──────────────────────────── */
 
@@ -777,20 +817,32 @@
   ══════════════════════════════════════════ -->
   <div class="section" id="tab-travel">
 
-    <!-- MAP EMBED — replace src with your Google My Maps embed URL -->
-    <!-- To create: maps.google.com > Your Places > Maps > Create > share > embed -->
-    <div class="travel-map-wrap">
-      <iframe src="https://www.google.com/maps/d/embed?mid=1VjuxhyfNWxih8j_yCdvlMmx2TrbV4hA" allowfullscreen></iframe>
+    <!-- Mobile: List / Map toggle (hidden on desktop) -->
+    <div class="travel-view-toggle">
+      <button class="view-btn active" data-view="list">&#9776;&nbsp; List</button>
+      <button class="view-btn"        data-view="map" >&#9632;&nbsp; Map</button>
     </div>
 
-    <div class="place-filter-bar">
-      <button class="place-filter-btn active" data-filter="all">All</button>
-      <button class="place-filter-btn" data-filter="see">See</button>
-      <button class="place-filter-btn" data-filter="read">Read</button>
-      <button class="place-filter-btn" data-filter="eat">Eat &amp; Drink</button>
-      <button class="place-filter-btn" data-filter="walk">Walk</button>
+    <div class="travel-layout" id="travelLayout">
+
+      <!-- Left: sticky map (desktop) / toggleable (mobile) -->
+      <div class="travel-map-panel">
+        <iframe src="https://www.google.com/maps/d/embed?mid=1VjuxhyfNWxih8j_yCdvlMmx2TrbV4hA" allowfullscreen></iframe>
+      </div>
+
+      <!-- Right: filter + place list -->
+      <div class="travel-list-panel">
+        <div class="place-filter-bar">
+          <button class="place-filter-btn active" data-filter="all">All</button>
+          <button class="place-filter-btn" data-filter="see">See</button>
+          <button class="place-filter-btn" data-filter="read">Read</button>
+          <button class="place-filter-btn" data-filter="eat">Eat &amp; Drink</button>
+          <button class="place-filter-btn" data-filter="walk">Walk</button>
+        </div>
+        <div class="place-list" id="placeGrid"></div>
+      </div>
+
     </div>
-    <div class="place-grid" id="placeGrid"></div>
   </div>
 
   <!-- ── Footer ────────────────────────────────── -->
@@ -1144,25 +1196,20 @@
         : PLACES.filter(p => p.type === filter);
 
       filtered.forEach(p => {
-        const card = document.createElement('a');
-        card.className = 'place-card';
-        card.href = p.maps;
-        card.target = '_blank';
-        card.rel = 'noopener';
-        card.innerHTML = `
-          <div class="place-card-head">
-            <span class="place-chip">${TYPE_LABELS[p.type]}</span>
-            <h3 class="place-name">${p.name}</h3>
+        const row = document.createElement('a');
+        row.className = 'place-row';
+        row.href = p.maps;
+        row.target = '_blank';
+        row.rel = 'noopener';
+        row.innerHTML = `
+          <span class="place-row-chip">${TYPE_LABELS[p.type]}</span>
+          <div class="place-row-main">
+            <div class="place-row-name">${p.name}</div>
+            <div class="place-row-note">${p.note}</div>
           </div>
-          <div class="place-card-body">
-            <p class="place-note">${p.note}</p>
-            <div class="place-footer">
-              <span class="place-address">${p.address}</span>
-              <span class="place-link">Map &#8594;</span>
-            </div>
-          </div>
+          <span class="place-row-arrow">&#8594;</span>
         `;
-        placeGrid.appendChild(card);
+        placeGrid.appendChild(row);
       });
     }
 
@@ -1173,6 +1220,15 @@
         document.querySelectorAll('.place-filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         renderPlaces(btn.dataset.filter);
+      });
+    });
+
+    /* ── Mobile: List / Map toggle ─────────────── */
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('travelLayout').classList.toggle('show-map', btn.dataset.view === 'map');
       });
     });
 
