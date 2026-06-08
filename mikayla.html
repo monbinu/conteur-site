@@ -3,188 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mikayla Kim — Conteur</title>
+  <title>Mikayla Kim</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
       --cream:        #f4efe6;
+      --cream-dark:   #ede8df;
       --ink:          #2e2820;
-      --ink-muted:    #8a7e70;
-      --ink-faint:    #b5a99a;
+      --ink-muted:    #6b6058;
+      --ink-faint:    #8a7e70;
       --board-bg:     #1a1714;
       --board-deep:   #111010;
-      --board-mid:    #1f1c18;
       --board-border: #2c2820;
       --tile-bg:      #232018;
       --amber:        #c8a060;
       --amber-mid:    #7a5c34;
       --amber-dim:    #3d2e1a;
-      --nav-h:        60px;
     }
 
-    html, body {
-      height: 100%;
-      overflow: hidden;
+    html {
       background: var(--board-bg);
+      /* prevents flash of cream background on load */
+    }
+
+    body {
+      background: var(--cream);
       font-family: 'Cormorant Garamond', serif;
       color: var(--ink);
+      min-height: 100vh;
     }
 
-    /* ─────────────────────────────────────────────
-       NAV
-    ───────────────────────────────────────────── */
+    /* ── Hero ─────────────────────────────────── */
 
-    .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: var(--nav-h);
+    .hero {
+      background: var(--board-deep);
+      padding: clamp(52px, 10vh, 88px) clamp(28px, 6vw, 72px) clamp(44px, 8vh, 72px);
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 clamp(24px, 5vw, 60px);
-      z-index: 100;
-      background: var(--cream);
+      flex-direction: column;
+      gap: clamp(14px, 2.5vh, 22px);
+      border-bottom: 1px solid var(--board-border);
       opacity: 0;
       animation: fadeIn 0.7s ease forwards 0.1s;
     }
 
-    .nav::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: clamp(24px, 5vw, 60px);
-      right: clamp(24px, 5vw, 60px);
-      height: 1px;
-      background: rgba(46, 40, 32, 0.12);
-    }
+    @keyframes fadeIn { to { opacity: 1; } }
 
-    .nav-wordmark {
-      font-weight: 300;
-      font-size: clamp(0.68rem, 1.1vw, 0.84rem);
-      letter-spacing: 0.38em;
-      text-indent: 0.38em;
-      text-transform: uppercase;
-      color: var(--ink);
-      text-decoration: none;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: clamp(16px, 2.5vw, 30px);
-    }
-
-    .nav-link {
-      font-size: clamp(0.62rem, 1vw, 0.75rem);
-      letter-spacing: 0.18em;
-      color: var(--ink-muted);
-      text-decoration: none;
-      text-transform: uppercase;
-      transition: color 0.2s ease;
-      position: relative;
-    }
-
-    .nav-link::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 0; right: 0;
-      height: 1px;
-      background: var(--ink);
-      transform: scaleX(0);
-      transform-origin: left;
-      transition: transform 0.25s ease;
-    }
-
-    .nav-link:hover { color: var(--ink); }
-    .nav-link:hover::after { transform: scaleX(1); }
-
-    /* language toggle */
-    .nav-divider {
-      width: 1px;
-      height: 14px;
-      background: rgba(46,40,32,0.2);
-    }
-
+    /* lang toggle */
     .lang-toggle {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       align-items: center;
+      margin-bottom: 4px;
     }
 
     .lang-btn {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.55rem, 0.85vw, 0.65rem);
-      letter-spacing: 0.1em;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
       color: var(--ink-faint);
       background: none;
-      border: none;
+      border: 1px solid transparent;
+      border-radius: 2px;
+      padding: 4px 10px;
       cursor: pointer;
-      padding: 0;
-      transition: color 0.2s ease;
-    }
-
-    .lang-btn.active { color: var(--ink); }
-    .lang-btn:hover  { color: var(--ink-muted); }
-
-    /* ─────────────────────────────────────────────
-       PAGE — full dark below nav
-    ───────────────────────────────────────────── */
-
-    .page {
-      position: fixed;
-      top: var(--nav-h);
-      left: 0; right: 0; bottom: 0;
-      display: flex;
-      flex-direction: column;
-      opacity: 0;
-      animation: fadeIn 0.9s ease forwards 0.3s;
-    }
-
-    /* ─────────────────────────────────────────────
-       IDENTITY BLOCK — top ~42%
-    ───────────────────────────────────────────── */
-
-    .identity {
-      flex: 0 0 42%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 0 clamp(28px, 6vw, 80px);
-      background: var(--board-deep);
-      border-bottom: 1px solid var(--board-border);
-      gap: clamp(8px, 1.5vh, 16px);
-    }
-
-    .legal-name {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.5rem, 1vw, 0.65rem);
-      letter-spacing: 0.28em;
-      color: var(--amber-mid);
+      transition: color 0.2s, border-color 0.2s;
       text-transform: uppercase;
     }
 
-    /* name tiles row */
+    .lang-btn.active {
+      color: var(--amber);
+      border-color: var(--amber-dim);
+    }
+
+    .lang-btn:hover { color: var(--amber-mid); }
+
+    /* name tiles */
     .name-tiles {
       display: flex;
-      gap: clamp(2px, 0.3vw, 4px);
+      gap: clamp(2px, 0.4vw, 5px);
       perspective: 800px;
+      flex-wrap: wrap;
     }
 
     .tile {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width:  clamp(1.5rem, 3.2vw, 2.6rem);
-      height: clamp(2.2rem, 5.5vh, 4rem);
+      width:  clamp(1.6rem, 3.5vw, 2.8rem);
+      height: clamp(2.4rem, 6vh, 4.4rem);
       background: var(--tile-bg);
       color: var(--amber);
       font-family: 'IBM Plex Mono', monospace;
-      font-size:   clamp(0.9rem, 2vw, 1.55rem);
+      font-size:   clamp(1rem, 2.2vw, 1.7rem);
       font-weight: 500;
       border-radius: 3px;
       user-select: none;
@@ -202,7 +116,10 @@
       pointer-events: none;
     }
 
-    .tile.is-space { color: transparent; }
+    .tile.is-space {
+      background: transparent;
+      width: clamp(0.6rem, 1.2vw, 1rem);
+    }
 
     .tile.flipping { animation: tileFlip 140ms ease-in-out; }
 
@@ -213,311 +130,326 @@
       100% { transform: rotateX(0deg);   opacity: 1;   }
     }
 
-    /* Korean tiles are wider */
+    /* Korean tiles */
     .name-tiles.ko .tile {
       font-family: 'Noto Sans KR', sans-serif;
       font-weight: 400;
-      width:  clamp(2.2rem, 4.8vw, 3.8rem);
-      font-size: clamp(0.85rem, 1.8vw, 1.4rem);
+      width: clamp(2rem, 4.5vw, 3.5rem);
+      font-size: clamp(0.9rem, 2vw, 1.5rem);
     }
 
-    .role {
+    .hero-title {
       font-style: italic;
-      font-size: clamp(0.9rem, 2vw, 1.4rem);
-      letter-spacing: 0.08em;
+      font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+      font-weight: 300;
       color: var(--amber);
+      letter-spacing: 0.04em;
       line-height: 1.2;
     }
 
-    .location {
+    .hero-location {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.46rem, 0.85vw, 0.58rem);
+      font-size: clamp(0.72rem, 1vw, 0.82rem);
       letter-spacing: 0.24em;
       color: var(--amber-mid);
       text-transform: uppercase;
     }
 
-    /* ─────────────────────────────────────────────
-       CONTENT — bottom ~58%
-    ───────────────────────────────────────────── */
+    /* ── Content ──────────────────────────────── */
 
     .content {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      min-height: 0;
+      opacity: 0;
+      animation: fadeIn 0.9s ease forwards 0.4s;
     }
 
-    .panel {
-      display: flex;
-      flex-direction: column;
-      padding: clamp(20px, 3.5vh, 40px) clamp(28px, 6vw, 80px);
-      gap: clamp(12px, 2vh, 24px);
-      border-right: 1px solid var(--board-border);
-      overflow-y: auto;
+    /* ── About section ────────────────────────── */
+
+    .about-section {
+      padding: clamp(36px, 6vh, 60px) clamp(28px, 6vw, 72px);
+      border-bottom: 1px solid rgba(46,40,32,0.12);
     }
 
-    .panel:last-child { border-right: none; }
-
-    .panel-header {
+    .section-label {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.46rem, 0.8vw, 0.58rem);
+      font-size: 0.72rem;
       letter-spacing: 0.32em;
-      color: var(--amber);
+      color: var(--amber-mid);
       text-transform: uppercase;
-      flex-shrink: 0;
+      margin-bottom: clamp(16px, 2.5vh, 24px);
     }
 
-    .panel-body {
-      display: flex;
-      flex-direction: column;
-      gap: clamp(12px, 2vh, 22px);
-      flex: 1;
+    .about-text {
+      font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+      font-weight: 300;
+      line-height: 1.85;
+      color: var(--ink);
     }
 
-    .panel-text {
-      font-size: clamp(0.88rem, 1.5vw, 1.08rem);
+    .event-note {
+      margin-top: clamp(20px, 3vh, 28px);
+      padding: clamp(16px, 2.5vh, 22px) clamp(18px, 3vw, 28px);
+      border-left: 2px solid var(--amber-mid);
+      background: var(--cream-dark);
+    }
+
+    .event-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber-mid);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .event-text {
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      font-weight: 300;
       line-height: 1.75;
-      color: #a89878;
+      color: var(--ink-muted);
       font-style: italic;
     }
 
-    /* event block */
-    .event-block {
-      border-left: 1px solid var(--amber-mid);
-      padding-left: clamp(10px, 1.5vw, 18px);
+    /* ── Contact section ──────────────────────── */
+
+    .contact-section {
+      padding: clamp(36px, 6vh, 60px) clamp(28px, 6vw, 72px);
+      border-bottom: 1px solid rgba(46,40,32,0.12);
+    }
+
+    .contact-grid {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(20px, 3vh, 28px);
+    }
+
+    .contact-item {
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
-    .event-name {
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.46rem, 0.8vw, 0.58rem);
-      letter-spacing: 0.16em;
-      color: var(--amber);
-      text-transform: uppercase;
-      line-height: 1.5;
-    }
-
-    .event-note {
-      font-style: italic;
-      font-size: clamp(0.82rem, 1.4vw, 1rem);
-      color: #8a7458;
-      line-height: 1.65;
-    }
-
-    /* contact items */
-    .contact-item {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
     .contact-label {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.4rem, 0.7vw, 0.5rem);
-      letter-spacing: 0.24em;
-      color: var(--amber-mid);
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      color: var(--ink-faint);
       text-transform: uppercase;
     }
 
-    .contact-value {
-      font-size: clamp(0.78rem, 1.4vw, 0.98rem);
-      color: var(--amber);
+    .contact-link {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      font-weight: 300;
+      color: var(--ink);
       text-decoration: none;
-      letter-spacing: 0.03em;
-      transition: color 0.2s ease;
+      border-bottom: 1px solid rgba(46,40,32,0.2);
+      padding-bottom: 2px;
+      display: inline-block;
+      transition: color 0.2s, border-color 0.2s;
     }
 
-    .contact-value:hover { color: #e8c080; }
+    .contact-link:hover {
+      color: var(--ink-muted);
+      border-bottom-color: var(--ink-muted);
+    }
 
-    /* add to contacts button */
+    .contact-link + .contact-link {
+      margin-top: 6px;
+    }
+
+    /* ── Add to Contacts ──────────────────────── */
+
+    .cta-section {
+      padding: clamp(28px, 5vh, 48px) clamp(28px, 6vw, 72px) clamp(40px, 7vh, 64px);
+    }
+
     .add-btn {
-      margin-top: auto;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      background: var(--amber-dim);
-      border: 1px solid var(--amber-mid);
+      gap: 10px;
+      width: 100%;
+      max-width: 360px;
+      background: var(--board-bg);
+      border: 1px solid var(--board-border);
       color: var(--amber);
       font-family: 'IBM Plex Mono', monospace;
-      font-size: clamp(0.52rem, 0.9vw, 0.65rem);
+      font-size: clamp(0.78rem, 1.2vw, 0.88rem);
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      padding: clamp(10px, 1.8vh, 16px) clamp(16px, 2.5vw, 28px);
+      padding: clamp(16px, 2.5vh, 20px) clamp(24px, 4vw, 36px);
       border-radius: 3px;
       cursor: pointer;
       text-decoration: none;
-      transition: background 0.2s ease, border-color 0.2s ease;
-      align-self: flex-start;
+      transition: background 0.2s, border-color 0.2s;
     }
 
     .add-btn:hover {
-      background: #4e3a20;
-      border-color: var(--amber);
+      background: #232018;
+      border-color: var(--amber-mid);
     }
 
-    /* ─────────────────────────────────────────────
-       KEYFRAMES
-    ───────────────────────────────────────────── */
-
-    @keyframes fadeIn { to { opacity: 1; } }
-
-    /* ─────────────────────────────────────────────
-       RESPONSIVE
-    ───────────────────────────────────────────── */
-
-    @media (max-width: 640px) {
-      :root { --nav-h: 52px; }
-
-      html, body { overflow: auto; }
-
-      .page {
-        position: relative;
-        top: 0;
-        padding-top: var(--nav-h);
-        min-height: 100vh;
-        height: auto;
-      }
-
-      .identity {
-        flex: none;
-        min-height: 44vh;
-        padding: 32px clamp(20px, 5vw, 36px);
-      }
-
-      .content {
-        grid-template-columns: 1fr;
-        height: auto;
-      }
-
-      .panel {
-        border-right: none;
-        border-bottom: 1px solid var(--board-border);
-        padding: 28px clamp(20px, 5vw, 36px);
-      }
-
-      .panel:last-child { border-bottom: none; }
-
-      .add-btn { align-self: stretch; justify-content: center; }
+    .add-btn svg {
+      width: 16px; height: 16px;
+      fill: currentColor;
+      flex-shrink: 0;
     }
 
-    @media (max-height: 600px) and (min-width: 641px) {
-      .identity { flex: 0 0 38%; gap: 6px; }
+    /* ── Footer ───────────────────────────────── */
+
+    .site-footer {
+      background: var(--board-deep);
+      border-top: 1px solid var(--board-border);
+      padding: 28px clamp(28px, 6vw, 72px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-wordmark {
+      font-weight: 300;
+      font-size: 0.72rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--amber-mid);
+      text-decoration: none;
+    }
+
+    .footer-wordmark:hover { color: var(--amber); }
+
+    .footer-ig {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--amber-mid);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      transition: color 0.2s;
+    }
+
+    .footer-ig:hover { color: var(--amber); }
+
+    .footer-ig svg {
+      width: 13px; height: 13px;
+      fill: currentColor;
+    }
+
+    /* ── Responsive ───────────────────────────── */
+
+    @media (min-width: 700px) {
+      .lower-panels {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border-bottom: 1px solid rgba(46,40,32,0.12);
+      }
+
+      .about-section {
+        border-bottom: none;
+        border-right: 1px solid rgba(46,40,32,0.12);
+      }
+
+      .contact-section {
+        border-bottom: none;
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- ── Nav ──────────────────────────────── -->
-  <nav class="nav">
-    <a class="nav-wordmark" href="/">Conteur</a>
-    <div class="nav-right">
-      <a class="nav-link" href="/about.html">About</a>
-      <a class="nav-link" href="/about.html#contact">Contact</a>
-      <div class="nav-divider"></div>
-      <div class="lang-toggle">
-        <button class="lang-btn active" data-lang="en">EN</button>
-        <button class="lang-btn"        data-lang="ko">KR</button>
-      </div>
+  <!-- ── Hero ───────────────────────────────── -->
+  <header class="hero">
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en">EN</button>
+      <button class="lang-btn"        data-lang="ko">KR</button>
     </div>
-  </nav>
+    <div class="name-tiles" id="nameTiles"></div>
+    <p class="hero-title"  id="heroTitle">Art Collector &amp; Advisor</p>
+    <p class="hero-location" id="heroLocation">Munich &nbsp;&middot;&nbsp; Germany</p>
+  </header>
 
-  <!-- ── Page ─────────────────────────────── -->
-  <div class="page">
+  <!-- ── Content ────────────────────────────── -->
+  <div class="content">
+    <div class="lower-panels">
 
-    <!-- Identity -->
-    <div class="identity">
-      <p class="legal-name" id="legalName">Yun Jae Kim</p>
-      <div class="name-tiles" id="nameTiles"></div>
-      <p class="role"     id="role">Founder, Conteur Space</p>
-      <p class="location" id="location">Munich · Germany</p>
-    </div>
-
-    <!-- Content panels -->
-    <div class="content">
-
-      <!-- What I do -->
-      <div class="panel">
-        <div class="panel-header" id="panelLabel1">What I Do</div>
-        <div class="panel-body">
-          <p class="panel-text" id="bio">
-            I run Conteur Space, a place for the genuinely curious.
-            We host art events, map exhibitions around the world,
-            and build ways for people to actually connect with culture.
-            No expertise required. Just show up.
-          </p>
-          <div class="event-block">
-            <span class="event-name" id="eventName">
-              Art Evenings with The Wednesday Club
-            </span>
-            <p class="event-note" id="eventNote">
-              Monthly art events in Munich. We walk into an exhibition
-              together, look at what is there, and talk about what we see.
-              Open to everyone.
-            </p>
-          </div>
+      <!-- About -->
+      <section class="about-section">
+        <p class="section-label" id="aboutLabel">About</p>
+        <p class="about-text" id="aboutText">Art collector and advisor based in Munich. I collect independently, host intimate art events, and advise on acquisitions. Currently attending and hosting across Europe.</p>
+        <div class="event-note">
+          <span class="event-label" id="eventLabel">Art Evenings &middot; The Wednesday Club</span>
+          <p class="event-text" id="eventText">Monthly art events in Munich. We walk into an exhibition together, look at what is there, and talk about what we see. Open to everyone.</p>
         </div>
-      </div>
+      </section>
 
-      <!-- Get in touch -->
-      <div class="panel">
-        <div class="panel-header" id="panelLabel2">Get in Touch</div>
-        <div class="panel-body">
-
-          <p class="panel-text" id="contactIntro">
-            Open to event collaborations, partnerships,
-            or just a conversation about art and culture.
-          </p>
+      <!-- Contact -->
+      <section class="contact-section">
+        <p class="section-label" id="contactLabel">Get in Touch</p>
+        <div class="contact-grid">
 
           <div class="contact-item">
             <span class="contact-label" id="emailLabel">Email</span>
-            <a class="contact-value" href="mailto:itsmikaylakim@gmail.com">
-              itsmikaylakim@gmail.com
-            </a>
+            <a class="contact-link" href="mailto:itsmikaylakim@gmail.com">itsmikaylakim@gmail.com</a>
+            <a class="contact-link" href="mailto:mikayla@conteur.space">mikayla@conteur.space</a>
           </div>
 
           <div class="contact-item">
             <span class="contact-label">Instagram</span>
-            <a class="contact-value" href="https://instagram.com/conteur.art" target="_blank">
-              @conteur.art
-            </a>
+            <a class="contact-link" href="https://instagram.com/conteur.art" target="_blank" rel="noopener">@conteur.art</a>
           </div>
 
           <div class="contact-item">
             <span class="contact-label">Web</span>
-            <a class="contact-value" href="https://conteur.space" target="_blank">
-              conteur.space
-            </a>
+            <a class="contact-link" href="https://conteur.space" target="_blank" rel="noopener">conteur.space</a>
           </div>
 
-          <a class="add-btn" id="addBtn" href="#" download="Mikayla_Kim.vcf">
-            + Add to Contacts
-          </a>
-
         </div>
-      </div>
+      </section>
 
     </div>
+
+    <!-- Add to Contacts -->
+    <section class="cta-section">
+      <a class="add-btn" id="addBtn" href="#">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 3a3 3 0 1 1 0 6 3 3 0 0 1 0-6zm6 13H6v-.9c0-2 4-3.1 6-3.1s6 1.1 6 3.1V19z"/>
+        </svg>
+        <span id="addBtnText">Save Contact</span>
+      </a>
+    </section>
+
   </div>
 
-  <script>
-    /* ── vCard ───────────────────────────────── */
+  <!-- ── Footer ─────────────────────────────── -->
+  <footer class="site-footer">
+    <a class="footer-wordmark" href="/index.html">Conteur</a>
+    <a class="footer-ig" href="https://instagram.com/conteur.art" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+      </svg>
+      @conteur.art
+    </a>
+  </footer>
 
-    const VCF = `BEGIN:VCARD
-VERSION:3.0
-FN:Mikayla Kim
-N:Kim;Mikayla;;;
-NICKNAME:Mikayla
-ORG:Conteur Space
-TITLE:Founder
-EMAIL;TYPE=INTERNET:itsmikaylakim@gmail.com
-URL:https://conteur.space
-X-SOCIALPROFILE;type=instagram;x-user=conteur.art:https://instagram.com/conteur.art
-NOTE:Art events and cultural discovery. Monthly art evenings in Munich with The Wednesday Club.
-END:VCARD`;
+  <script>
+    /* ── vCard (two emails) ──────────────────── */
+
+    const VCF = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      'FN:Mikayla Kim',
+      'N:Kim;Mikayla;;;',
+      'TITLE:Art Collector & Advisor',
+      'EMAIL;TYPE=INTERNET,PREF:itsmikaylakim@gmail.com',
+      'EMAIL;TYPE=INTERNET:mikayla@conteur.space',
+      'URL:https://conteur.space',
+      'X-SOCIALPROFILE;type=instagram;x-user=conteur.art:https://instagram.com/conteur.art',
+      'NOTE:Art collector and advisor based in Munich. Hosts art events with The Wednesday Club.',
+      'END:VCARD'
+    ].join('\r\n');
 
     document.getElementById('addBtn').href =
       'data:text/vcard;charset=utf-8,' + encodeURIComponent(VCF);
@@ -526,63 +458,58 @@ END:VCARD`;
 
     const COPY = {
       en: {
-        legalName:    'Yun Jae Kim',
         displayName:  'MIKAYLA KIM',
-        role:         'Founder, Conteur Space',
-        location:     'Munich · Germany',
-        panelLabel1:  'What I Do',
-        bio:          'I run Conteur Space, a place for the genuinely curious. We host art events, map exhibitions around the world, and build ways for people to actually connect with culture. No expertise required. Just show up.',
-        eventName:    'Art Evenings with The Wednesday Club',
-        eventNote:    'Monthly art events in Munich. We walk into an exhibition together, look at what is there, and talk about what we see. Open to everyone.',
-        panelLabel2:  'Get in Touch',
-        contactIntro: 'Open to event collaborations, partnerships, or just a conversation about art and culture.',
+        heroTitle:    'Art Collector &amp; Advisor',
+        heroLocation: 'Munich &nbsp;&middot;&nbsp; Germany',
+        aboutLabel:   'About',
+        aboutText:    'Art collector and advisor based in Munich. I collect independently, host intimate art events, and advise on acquisitions. Currently attending and hosting across Europe.',
+        eventLabel:   'Art Evenings &middot; The Wednesday Club',
+        eventText:    'Monthly art events in Munich. We walk into an exhibition together, look at what is there, and talk about what we see. Open to everyone.',
+        contactLabel: 'Get in Touch',
         emailLabel:   'Email',
-        addBtn:       '+ Add to Contacts',
+        addBtnText:   'Save Contact',
       },
       ko: {
-        legalName:    '김윤재',
         displayName:  '미카엘라 김',
-        role:         '파운더, 콩트르 스페이스',
-        location:     '독일 · 뮌헨',
-        panelLabel1:  '소개',
-        bio:          '콩트르 스페이스를 운영하고 있습니다. 진심으로 궁금한 분들을 위한 공간입니다. 아트 이벤트를 기획하고, 전 세계 전시를 정리하며, 사람들이 문화와 실제로 연결될 수 있는 방법을 만들어갑니다. 전문 지식은 필요 없습니다. 그냥 오시면 됩니다.',
-        eventName:    '더 웨드네스데이 클럽 아트 이브닝',
-        eventNote:    '매월 뮌헨에서 열리는 아트 이벤트. 함께 전시를 걷고, 작품을 보고, 보이는 것에 대해 이야기합니다. 누구나 환영합니다.',
-        panelLabel2:  '연락하기',
-        contactIntro: '이벤트 협업, 파트너십, 또는 예술과 문화에 대한 이야기라면 언제든지 연락 주세요.',
+        heroTitle:    '아트 콜렉터 &amp; 어드바이저',
+        heroLocation: '독일 &nbsp;&middot;&nbsp; 뮤헨',
+        aboutLabel:   '소개',
+        aboutText:    '뮤헨에 기반한 아트 콜렉터 및 어드바이저입니다. 독립적으로 작품을 콜렉팅하고, 애티하고 친근한 아트 이벤트를 주최하며, 취득 자문을 하고 있습니다. 현재 유럽 전역에서 전시를 참관하고 이벤트를 진행하고 있습니다.',
+        eventLabel:   '아트 이브닝 &middot; 더 웨드네스데이 클럽',
+        eventText:    '매월 뮤헨에서 열리는 아트 이벤트입니다. 함께 전시를 걸고, 작품을 보고, 보이는 것에 대해 이야기합니다. 누구나 환영합니다.',
+        contactLabel: '연락하기',
         emailLabel:   '이메일',
-        addBtn:       '+ 연락처 추가',
+        addBtnText:   '연락체 저장',
       },
     };
 
     /* ── Tile engine ─────────────────────────── */
 
-    const EN_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ·—0123456789';
+    const EN_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const KO_CHARS = '가나다라마바사아자차카타파하기니디리미비시이지치키티피히';
-
-    const wait  = ms => new Promise(r => setTimeout(r, ms));
+    const wait    = ms => new Promise(r => setTimeout(r, ms));
 
     let currentLang = 'en';
-    let tilesEl     = document.getElementById('nameTiles');
-    let tileNodes   = [];
+    const tilesEl  = document.getElementById('nameTiles');
+    let tileNodes  = [];
 
     function buildTiles(name, lang) {
       tilesEl.innerHTML = '';
       tilesEl.className = `name-tiles${lang === 'ko' ? ' ko' : ''}`;
       tileNodes = name.split('').map(ch => {
         const t = document.createElement('span');
-        t.className = 'tile' + (ch === ' ' ? ' is-space' : '');
-        t.textContent = ch === ' ' ? ' ' : ch;
+        t.className = ch === ' ' ? 'tile is-space' : 'tile';
+        t.textContent = ch === ' ' ? ' ' : ch;
         tilesEl.appendChild(t);
         return t;
       });
     }
 
-    async function flipTo(tile, char, lang) {
+    async function flipTo(tile, char) {
       tile.classList.add('flipping');
       await wait(70);
       if (char === ' ') {
-        tile.textContent = ' ';
+        tile.textContent = ' ';
         tile.classList.add('is-space');
       } else {
         tile.textContent = char;
@@ -598,37 +525,33 @@ END:VCARD`;
       const rchar   = () => charset[Math.floor(Math.random() * charset.length)];
       const cycles  = 3 + Math.floor(Math.random() * 2);
       for (let i = 0; i < cycles; i++) {
-        await flipTo(tile, rchar(), lang);
+        await flipTo(tile, rchar());
         await wait(22 + Math.pow(i / cycles, 2) * 55);
       }
-      await flipTo(tile, target, lang);
+      await flipTo(tile, target);
     }
 
     async function animateName(name, lang, delay = 0) {
       buildTiles(name, lang);
       await wait(delay);
-      await Promise.all(
-        tileNodes.map((tile, i) =>
-          animateTile(tile, name[i], lang, i * 36)
-        )
-      );
+      await Promise.all(tileNodes.map((tile, i) =>
+        animateTile(tile, name[i], lang, i * 36)
+      ));
     }
 
-    /* ── Text content swap ───────────────────── */
+    /* ── Apply language content ──────────────── */
 
     function applyLang(lang) {
       const c = COPY[lang];
-      document.getElementById('legalName').textContent    = c.legalName;
-      document.getElementById('role').textContent         = c.role;
-      document.getElementById('location').textContent     = c.location;
-      document.getElementById('panelLabel1').textContent  = c.panelLabel1;
-      document.getElementById('bio').textContent          = c.bio;
-      document.getElementById('eventName').textContent    = c.eventName;
-      document.getElementById('eventNote').textContent    = c.eventNote;
-      document.getElementById('panelLabel2').textContent  = c.panelLabel2;
-      document.getElementById('contactIntro').textContent = c.contactIntro;
-      document.getElementById('emailLabel').textContent   = c.emailLabel;
-      document.getElementById('addBtn').textContent       = c.addBtn;
+      document.getElementById('heroTitle').innerHTML    = c.heroTitle;
+      document.getElementById('heroLocation').innerHTML = c.heroLocation;
+      document.getElementById('aboutLabel').textContent = c.aboutLabel;
+      document.getElementById('aboutText').textContent  = c.aboutText;
+      document.getElementById('eventLabel').innerHTML   = c.eventLabel;
+      document.getElementById('eventText').textContent  = c.eventText;
+      document.getElementById('contactLabel').textContent = c.contactLabel;
+      document.getElementById('emailLabel').textContent = c.emailLabel;
+      document.getElementById('addBtnText').textContent = c.addBtnText;
     }
 
     /* ── Language toggle ─────────────────────── */
@@ -638,13 +561,11 @@ END:VCARD`;
         const lang = btn.dataset.lang;
         if (lang === currentLang) return;
         currentLang = lang;
-
         document.querySelectorAll('.lang-btn').forEach(b =>
           b.classList.toggle('active', b.dataset.lang === lang)
         );
-
         applyLang(lang);
-        animateName(COPY[lang].displayName, lang);
+        animateName(lang === 'ko' ? '미카엘라 김' : 'MIKAYLA KIM', lang);
       });
     });
 
