@@ -287,7 +287,8 @@
     .status-view { background: #2d4a2d; color: #7ec87e; }
     .status-soon { background: #4a2d2d; color: #c87e7e; }
     .status-new  { background: #2d3a4a; color: #7eaac8; }
-    .status-past { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .status-past     { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .exh-card--closed { opacity: 0.45; filter: grayscale(0.35); }
 
     .card-title {
       font-size: clamp(1rem, 2vw, 1.35rem);
@@ -580,11 +581,41 @@
 
     const EXHIBITIONS = [
       {
+        title:  'We Are Martin Parr',
+        venue:  'Seoul Museum of Art (SeMA)',
+        type:   'museum',
+        dates:  'Jul 16 — Oct 18, 2026',
+        status: 'view',
+        ends:   '2026-10-18',
+        desc:   'Retrospective spanning five decades of British documentary photographer Martin Parr — his wry and affectionate observation of everyday life, leisure culture, and consumer society presented with new Korean-specific context.',
+        url:    'https://sema.seoul.go.kr',
+      },
+      {
+        title:  'Yoo Youngkuk: A Mountain Within Me',
+        venue:  'Seoul Museum of Art (SeMA)',
+        type:   'museum',
+        dates:  'May 19 — Oct 25, 2026',
+        status: 'view',
+        ends:   '2026-10-25',
+        desc:   'A major survey of Korea\'s pioneering abstract painter Yoo Youngkuk (1916–2002), whose distilled, mountain-inspired compositions helped define Korean modernism in the postwar era.',
+        url:    'https://sema.seoul.go.kr',
+      },
+      {
+        title:  'The Cubists: Inventing Modern Vision',
+        venue:  'Centre Pompidou Hanwha',
+        type:   'museum',
+        dates:  'From Jun 4, 2026',
+        status: 'view',
+        desc:   'The inaugural exhibition of the Pompidou\'s first South Korean venue — tracing Cubism\'s development in Paris from 1907 to 1927 through 90+ works by 40+ artists drawn from the Pompidou permanent collection.',
+        url:    'https://www.centrepompidou.fr',
+      },
+      {
         title:  'Lee Ufan: Resonance',
         venue:  'Leeum, Samsung Museum of Art',
         type:   'museum',
         dates:  'Apr 3 — Aug 17, 2026',
         status: 'view',
+        ends:   '2026-08-17',
         desc:   'A landmark retrospective of the Korean-Japanese artist whose Mono-ha movement redefined the relationship between material, space, and perception. Over 100 paintings, sculptures, and installations across Leeum\'s two buildings.',
         url:    'https://leeum.org',
       },
@@ -594,16 +625,20 @@
         type:   'museum',
         dates:  'Sep 10 — Nov 22, 2026',
         status: 'upcoming',
+        starts: '2026-09-10',
+        ends:   '2026-11-22',
         desc:   'The biennial returns with artists from 30 countries exploring media, urban life, and digital infrastructure. One of Asia\'s most rigorous survey exhibitions, rooted in the city\'s own condition.',
         url:    'https://sema.seoul.go.kr',
       },
       {
-        title:  'Do Ho Suh: Specimens',
+        title:  'Do Ho Suh: Major Retrospective',
         venue:  'National Museum of Modern and Contemporary Art (MMCA)',
         type:   'museum',
-        dates:  'May 22 — Oct 5, 2026',
-        status: 'view',
-        desc:   'The most comprehensive survey of Do Ho Suh\'s practice in Korea — translucent fabric architectures, net sculptures, and new commissions examining home, displacement, and belonging across cultures.',
+        dates:  'Aug 28, 2026 — Feb 9, 2027',
+        status: 'upcoming',
+        starts: '2026-08-28',
+        ends:   '2027-02-09',
+        desc:   'The largest-ever solo exhibition of Korea\'s foremost installation artist — translucent fabric architectures, net sculptures, and new commissions examining home, displacement, and belonging across cultures.',
         url:    'https://www.mmca.go.kr',
       },
       {
@@ -612,6 +647,7 @@
         type:   'gallery',
         dates:  'Jun 5 — Jul 27, 2026',
         status: 'new',
+        ends:   '2026-07-27',
         desc:   'New Venetian blind and woven sculptures from Yang\'s ongoing exploration of sensory experience and political abstraction. Shown in dialogue with works on paper across Kukje\'s two Seoul spaces.',
         url:    'https://www.kukjegallery.com',
       },
@@ -620,7 +656,8 @@
         venue:  'Gallery Hyundai',
         type:   'gallery',
         dates:  'May 8 — Jun 28, 2026',
-        status: 'soon',
+        status: 'past',
+        ends:   '2026-06-28',
         desc:   'New kinetic and textile works from the Tate Turbine Hall artist, extending her investigation of bodily fragility and industrial process. Her most ambitious Seoul solo to date.',
         url:    'https://www.galleryhyundai.com',
       },
@@ -630,31 +667,50 @@
         type:   'fair',
         dates:  'Sep 3 — Sep 7, 2026',
         status: 'upcoming',
+        starts: '2026-09-03',
+        ends:   '2026-09-07',
         desc:   'Frieze Seoul returns for its fifth edition alongside the Korea International Art Fair — together the largest convergence of international galleries in Asia, with 120+ exhibitors from 30 countries.',
         url:    'https://www.frieze.com/fairs/frieze-seoul',
       },
     ];
 
     const STATUS_LABELS = {
-      upcoming: 'Upcoming',
-      view: 'On View',
-      new:  'Just Opened',
-      soon: 'Closing Soon',
-      past: 'Past',
+      upcoming: 'Upcoming', view: 'On View', new: 'Just Opened',
+      soon: 'Closing Soon', past: 'Past',    closed: 'Closed',
     };
+
+    const _today  = new Date(); _today.setHours(0,0,0,0);
+    const _mStart = new Date(_today.getFullYear(), _today.getMonth(), 1);
+
+    function computeStatus(e) {
+      if (!e.ends) return 'view';
+      const end = new Date(e.ends), start = e.starts ? new Date(e.starts) : null;
+      if (end   < _mStart)         return 'hidden';
+      if (end   < _today)          return 'closed';
+      if (start && start > _today) return 'upcoming';
+      return 'view';
+    }
 
     function renderExhibitions(filter = 'all') {
       const exhGrid = document.getElementById('exhGrid');
       exhGrid.innerHTML = '';
-      const filtered = filter === 'all' ? EXHIBITIONS : EXHIBITIONS.filter(e => e.type === filter);
-      filtered.forEach(e => {
+
+      let items = filter === 'all' ? EXHIBITIONS : EXHIBITIONS.filter(e => e.type === filter);
+      items = items
+        .map(e => ({ ...e, _s: computeStatus(e) }))
+        .filter(e => e._s !== 'hidden')
+        .sort((a, b) => a._s === 'closed' ? 1 : b._s === 'closed' ? -1 : 0);
+
+      items.forEach(e => {
         const a = document.createElement('a');
-        a.className = 'exh-card';
+        a.className = `exh-card${e._s === 'closed' ? ' exh-card--closed' : ''}`;
         a.href = e.url; a.target = '_blank'; a.rel = 'noopener';
+        const cssStatus = e._s === 'closed' ? 'past' : (e._s === 'view' ? e.status : e._s);
+        const label     = STATUS_LABELS[e._s] || STATUS_LABELS[e.status] || 'On View';
         a.innerHTML = `
           <div class="card-top">
             <span class="card-type">${e.type}</span>
-            <span class="card-status status-${e.status}">${STATUS_LABELS[e.status]}</span>
+            <span class="card-status status-${cssStatus}">${label}</span>
           </div>
           <h3 class="card-title">${e.title}</h3>
           <p class="card-venue">${e.venue}</p>

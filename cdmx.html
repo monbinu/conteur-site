@@ -277,7 +277,8 @@
     .status-view { background: #2d4a2d; color: #7ec87e; }
     .status-soon { background: #4a2d2d; color: #c87e7e; }
     .status-new  { background: #2d3a4a; color: #7eaac8; }
-    .status-past { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .status-past     { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .exh-card--closed { opacity: 0.45; filter: grayscale(0.35); }
 
     .card-title {
       font-size: clamp(1rem, 2vw, 1.35rem);
@@ -563,11 +564,22 @@
 
     const EXHIBITIONS = [
       {
+        title:  'Objects of Glory: Iconic Moments in the History of Football',
+        venue:  'Museo Jumex',
+        type:   'museum',
+        dates:  'Jun 10 — Aug 30, 2026',
+        status: 'view',
+        ends:   '2026-08-30',
+        desc:   'A major exhibition examining football\'s visual and cultural history through the lens of the 2026 FIFA World Cup, bringing together artists, artefacts, and archival imagery at CDMX\'s leading contemporary art museum.',
+        url:    'https://www.fundacionjumex.org',
+      },
+      {
         title:  'Gabriel Orozco: Inner Cycles',
         venue:  'Museo Jumex',
         type:   'museum',
         dates:  'Apr 24 — Aug 30, 2026',
         status: 'view',
+        ends:   '2026-08-30',
         desc:   'A mid-career survey of Mexico\'s foremost conceptual artist — yogurt lids, billiard tables, skulls, and the natural world rearranged with quiet precision. Orozco\'s first major institutional show in his home city in over a decade.',
         url:    'https://www.fundacionjumex.org',
       },
@@ -577,6 +589,7 @@
         type:   'museum',
         dates:  'May 16 — Sep 28, 2026',
         status: 'view',
+        ends:   '2026-09-28',
         desc:   'Tracing the parallel and divergent trajectories of geometric abstraction from Buenos Aires to Bogotá to Mexico City. Includes rarely seen works from private collections alongside the Tamayo\'s own holdings.',
         url:    'https://www.museotamayo.org',
       },
@@ -585,7 +598,8 @@
         venue:  'Museo de Arte Moderno',
         type:   'museum',
         dates:  'Jun 12 — Oct 11, 2026',
-        status: 'upcoming',
+        status: 'view',
+        ends:   '2026-10-11',
         desc:   'A landmark retrospective of Margolles\'s practice — forensic materials, morgue water, and communal grief transformed into rigorous conceptual art. Unflinching and essential.',
         url:    'https://mam.inba.gob.mx',
       },
@@ -594,7 +608,8 @@
         venue:  'kurimanzutto',
         type:   'gallery',
         dates:  'May 7 — Jul 5, 2026',
-        status: 'soon',
+        status: 'past',
+        ends:   '2026-07-05',
         desc:   'New sculptures built from reclaimed materials sourced from the neighbourhoods surrounding the gallery. Cruzvillegas\'s ongoing inquiry into improvised construction, informal urbanism, and collective memory.',
         url:    'https://kurimanzutto.com',
       },
@@ -604,6 +619,7 @@
         type:   'gallery',
         dates:  'Jun 6 — Aug 9, 2026',
         status: 'new',
+        ends:   '2026-08-09',
         desc:   'New paintings from Segovia\'s subversive rereading of the Mexican charro — queering the icon of masculine nationalism into something tender and strange. Her most ambitious body of work to date.',
         url:    'https://www.galeria-omr.com',
       },
@@ -613,31 +629,49 @@
         type:   'fair',
         dates:  'Feb 5 — Feb 9, 2026',
         status: 'past',
+        ends:   '2026-02-09',
         desc:   'Latin America\'s most important art fair drew 130 galleries from 22 countries for its 22nd edition. Zones included MACO Arte (modern/contemporary), MACO Projects (solo presentations), and Sur (emerging practices).',
         url:    'https://www.zonamaco.com',
       },
     ];
 
     const STATUS_LABELS = {
-      upcoming: 'Upcoming',
-      view: 'On View',
-      new:  'Just Opened',
-      soon: 'Closing Soon',
-      past: 'Past',
+      upcoming: 'Upcoming', view: 'On View', new: 'Just Opened',
+      soon: 'Closing Soon', past: 'Past',    closed: 'Closed',
     };
+
+    const _today  = new Date(); _today.setHours(0,0,0,0);
+    const _mStart = new Date(_today.getFullYear(), _today.getMonth(), 1);
+
+    function computeStatus(e) {
+      if (!e.ends) return 'view';
+      const end = new Date(e.ends), start = e.starts ? new Date(e.starts) : null;
+      if (end   < _mStart)         return 'hidden';
+      if (end   < _today)          return 'closed';
+      if (start && start > _today) return 'upcoming';
+      return 'view';
+    }
 
     function renderExhibitions(filter = 'all') {
       const exhGrid = document.getElementById('exhGrid');
       exhGrid.innerHTML = '';
-      const filtered = filter === 'all' ? EXHIBITIONS : EXHIBITIONS.filter(e => e.type === filter);
-      filtered.forEach(e => {
+
+      let items = filter === 'all' ? EXHIBITIONS : EXHIBITIONS.filter(e => e.type === filter);
+      items = items
+        .map(e => ({ ...e, _s: computeStatus(e) }))
+        .filter(e => e._s !== 'hidden')
+        .sort((a, b) => a._s === 'closed' ? 1 : b._s === 'closed' ? -1 : 0);
+
+      items.forEach(e => {
         const a = document.createElement('a');
-        a.className = 'exh-card';
+        a.className = `exh-card${e._s === 'closed' ? ' exh-card--closed' : ''}`;
         a.href = e.url; a.target = '_blank'; a.rel = 'noopener';
+        const cssStatus = e._s === 'closed' ? 'past' : (e._s === 'view' ? e.status : e._s);
+        const label     = STATUS_LABELS[e._s] || STATUS_LABELS[e.status] || 'On View';
         a.innerHTML = `
           <div class="card-top">
             <span class="card-type">${e.type}</span>
-            <span class="card-status status-${e.status}">${STATUS_LABELS[e.status]}</span>
+            <span class="card-status status-${cssStatus}">${label}</span>
           </div>
           <h3 class="card-title">${e.title}</h3>
           <p class="card-venue">${e.venue}</p>

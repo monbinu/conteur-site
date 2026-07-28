@@ -289,7 +289,8 @@
     .status-view { background: #2d4a2d; color: #7ec87e; }
     .status-soon { background: #4a2d2d; color: #c87e7e; }
     .status-new  { background: #2d3a4a; color: #7eaac8; }
-    .status-past { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .status-past     { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .exh-card--closed { opacity: 0.45; filter: grayscale(0.35); }
 
     .card-title {
       font-size: clamp(1rem, 2vw, 1.35rem);
@@ -656,11 +657,33 @@
 
     const EXHIBITIONS = [
       {
+        title:  'Matisse, 1941–1954',
+        venue:  'Grand Palais',
+        type:   'museum',
+        dates:  'Mar 24 — Aug 2, 2026',
+        status: 'soon',
+        ends:   '2026-08-02',
+        desc:   'Co-produced with Centre Pompidou, this monumental retrospective of Matisse\'s final creative years gathers 300+ works — paintings, drawings, and his revolutionary gouaches découpées — tracing the birth of colour without limit.',
+        url:    'https://www.grandpalais.fr',
+      },
+      {
+        title:  'Mary Cassatt: The Choice of Independence',
+        venue:  'Musée d\'Orsay',
+        type:   'museum',
+        dates:  'Oct 6, 2026 — Jan 31, 2027',
+        status: 'upcoming',
+        starts: '2026-10-06',
+        ends:   '2027-01-31',
+        desc:   'Centenary retrospective of the pioneering American Impressionist, featuring nearly 80 rarely exhibited works from international collections, marking 100 years since her death.',
+        url:    'https://www.musee-orsay.fr',
+      },
+      {
         title:  'Manet / Degas',
         venue:  'Musée d\'Orsay',
         type:   'museum',
         dates:  'Mar 28 — Jul 23, 2026',
         status: 'soon',
+        ends:   '2026-07-23',
         desc:   'A landmark dialogue between two giants of 19th-century painting. The exhibition traces the complex friendship and rivalry that shaped Impressionism through 180 works rarely shown together.',
         url:    'https://www.musee-orsay.fr',
       },
@@ -670,16 +693,30 @@
         type:   'museum',
         dates:  'Sep 4, 2026 — Jan 13, 2027',
         status: 'upcoming',
+        starts: '2026-09-04',
+        ends:   '2027-01-13',
         desc:   'A centennial retrospective marking 100 years since the Surrealist Manifesto. Over 500 works spanning painting, sculpture, film, and photography from across the movement\'s international reach.',
         url:    'https://www.centrepompidou.fr',
       },
       {
-        title:  'Mark Rothko',
+        title:  'Calder. Rêver en Équilibre',
         venue:  'Fondation Louis Vuitton',
         type:   'museum',
-        dates:  'Oct 2 — Feb 16, 2027',
+        dates:  'Apr 15 — Aug 16, 2026',
+        status: 'soon',
+        ends:   '2026-08-16',
+        desc:   'A major retrospective of Alexander Calder\'s mobiles, stabiles, and wire sculptures — tracing how the American artist invented a new language of movement, balance, and air in 20th-century art.',
+        url:    'https://www.fondationlouisvuitton.fr',
+      },
+      {
+        title:  'Gustave Fayet, Collector-Designer: Icons of Modern Art',
+        venue:  'Fondation Louis Vuitton',
+        type:   'museum',
+        dates:  'Oct 9, 2026 — Mar 8, 2027',
         status: 'upcoming',
-        desc:   'The most complete retrospective of Rothko\'s career ever mounted in Europe, with over 115 works tracing his path from figuration through the color field paintings that defined his legacy.',
+        starts: '2026-10-09',
+        ends:   '2027-03-08',
+        desc:   'A spectacular exhibition through the vision of early 20th-century French collector and artist Gustave Fayet, alongside masterworks by Van Gogh, Gauguin, and Redon from his assembled collection.',
         url:    'https://www.fondationlouisvuitton.fr',
       },
       {
@@ -687,7 +724,8 @@
         venue:  'Palais de Tokyo',
         type:   'museum',
         dates:  'Jun 19 — Sep 7, 2026',
-        status: 'upcoming',
+        status: 'view',
+        ends:   '2026-09-07',
         desc:   'Immersive large-scale installations by the Berlin-based Japanese artist, filling the Palais\'s vast industrial spaces with webs of red thread, keys, windows, and sleeping bodies.',
         url:    'https://www.palaisdetokyo.com',
       },
@@ -697,6 +735,7 @@
         type:   'gallery',
         dates:  'May 10 — Jul 26, 2026',
         status: 'view',
+        ends:   '2026-07-26',
         desc:   'A focused presentation of new works on paper by five international artists from the gallery\'s programme, exploring material fragility, gesture, and the limits of representation.',
         url:    'https://www.crousel.com',
       },
@@ -706,45 +745,56 @@
         type:   'fair',
         dates:  'Oct 22 — Oct 26, 2026',
         status: 'upcoming',
+        starts: '2026-10-22',
+        ends:   '2026-10-26',
         desc:   'The annual fair returns to the Grand Palais with 195 galleries from 42 countries. Sectors include Emergence (young practices) and Premise (solo presentations by established artists).',
         url:    'https://www.artbasel.com/paris',
       },
     ];
 
     const STATUS_LABELS = {
-      upcoming: 'Upcoming',
-      view: 'On View',
-      new:  'Just Opened',
-      soon: 'Closing Soon',
-      past: 'Past',
+      upcoming: 'Upcoming', view: 'On View', new: 'Just Opened',
+      soon: 'Closing Soon', past: 'Past',    closed: 'Closed',
     };
+
+    const _today  = new Date(); _today.setHours(0,0,0,0);
+    const _mStart = new Date(_today.getFullYear(), _today.getMonth(), 1);
+
+    function computeStatus(e) {
+      if (!e.ends) return 'view';
+      const end = new Date(e.ends), start = e.starts ? new Date(e.starts) : null;
+      if (end   < _mStart)         return 'hidden';
+      if (end   < _today)          return 'closed';
+      if (start && start > _today) return 'upcoming';
+      return 'view';
+    }
 
     function renderExhibitions(filter = 'all') {
       const exhGrid = document.getElementById('exhGrid');
       exhGrid.innerHTML = '';
 
-      const filtered = filter === 'all'
-        ? EXHIBITIONS
-        : EXHIBITIONS.filter(e => e.type === filter);
+      let items = filter === 'all' ? EXHIBITIONS : EXHIBITIONS.filter(e => e.type === filter);
+      items = items
+        .map(e => ({ ...e, _s: computeStatus(e) }))
+        .filter(e => e._s !== 'hidden')
+        .sort((a, b) => a._s === 'closed' ? 1 : b._s === 'closed' ? -1 : 0);
 
-      filtered.forEach(e => {
+      items.forEach(e => {
         const a = document.createElement('a');
-        a.className = 'exh-card';
-        a.href      = e.url;
-        a.target    = '_blank';
-        a.rel       = 'noopener';
-
+        a.className = `exh-card${e._s === 'closed' ? ' exh-card--closed' : ''}`;
+        a.href = e.url; a.target = '_blank'; a.rel = 'noopener';
+        const cssStatus = e._s === 'closed' ? 'past' : (e._s === 'view' ? e.status : e._s);
+        const label     = STATUS_LABELS[e._s] || STATUS_LABELS[e.status] || 'On View';
         a.innerHTML = `
           <div class="card-top">
             <span class="card-type">${e.type}</span>
-            <span class="card-status status-${e.status}">${STATUS_LABELS[e.status]}</span>
+            <span class="card-status status-${cssStatus}">${label}</span>
           </div>
           <h3 class="card-title">${e.title}</h3>
           <p class="card-venue">${e.venue}</p>
           <p class="card-desc">${e.desc}</p>
           <p class="card-dates">${e.dates}</p>
         `;
-
         exhGrid.appendChild(a);
       });
     }

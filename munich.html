@@ -430,6 +430,7 @@
     .status-soon     { background: #4a2d2d; color: #c87e7e; }
     .status-new      { background: #2d3a4a; color: #7eaac8; }
     .status-past     { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .exh-card--closed { opacity: 0.45; filter: grayscale(0.35); }
     .card-title {
       font-size: clamp(1rem, 2vw, 1.35rem);
       font-weight: 400;
@@ -563,6 +564,163 @@
     @media (max-width: 500px) {
       :root { --nav-h: 52px; }
     }
+    /* ── Events tab ───────────────────────────── */
+
+    .event-filter-bar {
+      padding: clamp(14px, 2vh, 22px) clamp(24px, 5vw, 60px);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(46,40,32,0.08);
+    }
+
+    .event-filter-btn {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(0.66rem, 0.82vw, 0.74rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border: 1px solid rgba(46,40,32,0.2);
+      border-radius: 2px;
+      background: none;
+      color: var(--ink-muted);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .event-filter-btn.active,
+    .event-filter-btn:hover {
+      background: var(--ink);
+      color: var(--cream);
+      border-color: var(--ink);
+    }
+
+    .event-list { }
+
+    .event-row {
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      align-items: start;
+      gap: 0 20px;
+      padding: clamp(16px, 2.5vh, 24px) clamp(24px, 5vw, 60px);
+      border-bottom: 1px solid rgba(46,40,32,0.08);
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s;
+    }
+
+    .event-row:hover { background: rgba(46,40,32,0.025); }
+
+    .event-row--past { opacity: 0.45; filter: grayscale(0.35); }
+
+    .event-date-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      padding-top: 3px;
+    }
+
+    .event-date-day {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    .event-date-num {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      font-weight: 400;
+      color: var(--amber);
+      line-height: 1;
+    }
+
+    .event-date-weekly {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.54rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--amber);
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .event-main { min-width: 0; }
+
+    .event-name {
+      font-size: clamp(1rem, 1.6vw, 1.2rem);
+      font-weight: 300;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .event-meta {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: clamp(0.66rem, 0.82vw, 0.72rem);
+      letter-spacing: 0.1em;
+      color: var(--ink-faint);
+      margin-bottom: 5px;
+    }
+
+    .event-note {
+      font-size: clamp(0.82rem, 1.1vw, 0.92rem);
+      font-style: italic;
+      color: var(--ink-muted);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .event-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      padding-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .event-chip {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.56rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--amber-mid);
+      background: rgba(122,92,52,0.1);
+      border: 1px solid rgba(122,92,52,0.22);
+      padding: 3px 7px;
+      border-radius: 2px;
+      white-space: nowrap;
+    }
+
+    .event-price {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      color: var(--ink-faint);
+    }
+
+    .event-arrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--ink-faint);
+      transition: color 0.2s, transform 0.2s;
+    }
+
+    .event-row:hover .event-arrow {
+      color: var(--ink-muted);
+      transform: translateX(2px);
+    }
+
+    @media (max-width: 500px) {
+      .event-row { grid-template-columns: 52px 1fr auto; gap: 0 12px; }
+      .event-note { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -582,12 +740,13 @@
   </div>
 
   <div class="tab-bar">
-    <button class="tab-btn active" data-tab="exhibitions">Exhibitions</button>
+    <button class="tab-btn active" data-tab="events">Events</button>
+    <button class="tab-btn"        data-tab="exhibitions">Exhibitions</button>
     <button class="tab-btn"        data-tab="books">Books</button>
     <button class="tab-btn"        data-tab="travel">Travel</button>
   </div>
 
-  <div class="section active" id="tab-exhibitions">
+  <div class="section" id="tab-exhibitions">
 
     <div class="ticket-wrap">
       <a class="ticket" href="#" id="featuredEvent">
@@ -602,19 +761,19 @@
         <div class="ticket-body">
           <div class="ticket-top">
             <span class="ticket-chip">Art Event</span>
-            <span class="ticket-date">19 Jul 2026</span>
+            <span class="ticket-date">4 Sep 2026</span>
           </div>
 
-          <h2 class="ticket-title">Art Sunday</h2>
+          <h2 class="ticket-title">Art Evening</h2>
 
           <div class="ticket-fields">
             <div class="ticket-field">
               <span class="field-label">Time</span>
-              <span class="field-value">11:00 &#8211; 14:00</span>
+              <span class="field-value">19:00 &#8211; 21:00</span>
             </div>
             <div class="ticket-field">
               <span class="field-label">Venue</span>
-              <span class="field-value">Museum Brandhorst</span>
+              <span class="field-value">Villa Stuck</span>
             </div>
             <div class="ticket-field">
               <span class="field-label">City</span>
@@ -623,7 +782,7 @@
           </div>
 
           <div class="ticket-footer">
-            <span class="ticket-host">Hosted by Conteur & Wednesday Club</span>
+            <span class="ticket-host">Hosted by Conteur</span>
             <span class="ticket-admit">Open to all</span>
           </div>
         </div>
@@ -668,6 +827,19 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       EVENTS
+  ══════════════════════════════════════════ -->
+  <div class="section active" id="tab-events">
+    <div class="event-filter-bar">
+      <button class="event-filter-btn active" data-filter="all">All</button>
+      <button class="event-filter-btn" data-filter="festival">Festival</button>
+      <button class="event-filter-btn" data-filter="music">Music</button>
+      <button class="event-filter-btn" data-filter="outdoor">Outdoor</button>
+    </div>
+    <div class="event-list" id="eventList"></div>
   </div>
 
   <div class="section" id="tab-travel">
@@ -761,7 +933,8 @@
         title:  'Monica Bonvicini: Never Again',
         venue:  'Haus der Kunst',
         type:   'museum',
-        dates:  'Apr 12 - Sep 7, 2026',
+        dates:  'Apr 12 – Sep 7, 2026',
+        ends:   '2026-09-07',
         status: 'view',
         desc:   'A major survey of the Berlin-based artist\'s three-decade investigation into architecture, power, and gender, spanning installation, neon, and large-scale sculpture.',
         url:    'https://www.hausderkunst.de',
@@ -770,7 +943,8 @@
         title:  'Material Futures',
         venue:  'Pinakothek der Moderne',
         type:   'museum',
-        dates:  'Mar 8 - Sep 28, 2026',
+        dates:  'Mar 8 – Sep 28, 2026',
+        ends:   '2026-09-28',
         status: 'view',
         desc:   'A sweeping survey of German design practice in the twenty-first century, from industrial objects and experimental typography to speculative and ecological futures.',
         url:    'https://www.pinakothek-der-moderne.de',
@@ -779,7 +953,8 @@
         title:  'Harun Farocki: Parallel',
         venue:  'Kunsthalle München',
         type:   'museum',
-        dates:  'May 3 - Jul 13, 2026',
+        dates:  'May 3 – Jul 13, 2026',
+        ends:   '2026-07-13',
         status: 'soon',
         desc:   'A focused presentation of Farocki\'s landmark series examining video game imagery as a new form of industrial image production and what it reveals about seeing itself.',
         url:    'https://www.kunsthallemuenchen.de',
@@ -788,40 +963,103 @@
         title:  'Sturtevant: The Razzle Dazzle of Thinking',
         venue:  'Sammlung Goetz',
         type:   'gallery',
-        dates:  'Jun 1 - Nov 22, 2026',
+        dates:  'Jun 1 – Nov 22, 2026',
+        ends:   '2026-11-22',
         status: 'view',
         desc:   'An intimate presentation of Sturtevant\'s radical practice of repetition and appropriation, drawn from Ingvild Goetz\'s private collection.',
         url:    'https://www.sammlung-goetz.de',
+      },
+      {
+        title:  'Beyond the World. The Blue Rider',
+        venue:  'Lenbachhaus',
+        type:   'museum',
+        dates:  'Mar 10 – Sep 5, 2026',
+        ends:   '2026-09-05',
+        status: 'view',
+        desc:   'The world\'s largest Blue Rider collection reframed in a major new thematic presentation — 150+ works including new acquisitions, with galleries dedicated to the group\'s stays in Murnau and their landmark 1911–12 exhibitions.',
+        url:    'https://www.lenbachhaus.de',
+      },
+      {
+        title:  'Tomás Saraceno: Ancestral Futures',
+        venue:  'Haus der Kunst',
+        type:   'museum',
+        dates:  'Jul 17, 2026 – Feb 7, 2027',
+        ends:   '2027-02-07',
+        status: 'new',
+        desc:   'Saraceno\'s largest-ever exhibition in Germany — air-powered sculptures, spider-vibration soundscapes, and collaborative installations built with Indigenous communities connecting ecological justice and multi-species coexistence.',
+        url:    'https://www.hausderkunst.de',
+      },
+      {
+        title:  'BMW Art Cars',
+        venue:  'BMW Welt',
+        type:   'museum',
+        dates:  'Jul 29 – Aug 31, 2026',
+        ends:   '2026-08-31',
+        status: 'new',
+        desc:   'The complete fleet of BMW Art Cars — vehicles designed by Warhol, Lichtenstein, Hockney, Koons, and Cao Fei — shown together in BMW\'s landmark exhibition venue in Munich\'s Olympic Quarter.',
+        url:    'https://www.bmw-welt.com',
+      },
+      {
+        title:  'Maria Jarema',
+        venue:  'Lenbachhaus',
+        type:   'museum',
+        dates:  'Oct 27, 2026 – Apr 25, 2027',
+        starts: '2026-10-27',
+        ends:   '2027-04-25',
+        status: 'upcoming',
+        desc:   'First-ever presentation in Germany of Polish avant-garde artist Maria Jarema (1908–1958), described as the "revolutionary commissar of abstraction," bringing her little-known legacy to German-speaking audiences.',
+        url:    'https://www.lenbachhaus.de',
       },
     ];
 
     const STATUS_LABELS = {
       upcoming: 'Upcoming',
-      view: 'On View',
-      new:  'Just Opened',
-      soon: 'Closing Soon',
-      past: 'Past',
+      view:     'On View',
+      new:      'Just Opened',
+      soon:     'Closing Soon',
+      past:     'Past',
+      closed:   'Closed',
     };
+
+    const _today  = new Date(); _today.setHours(0,0,0,0);
+    const _mStart = new Date(_today.getFullYear(), _today.getMonth(), 1);
+
+    function computeStatus(e) {
+      if (!e.ends) return 'view';
+      const end   = new Date(e.ends);
+      const start = e.starts ? new Date(e.starts) : null;
+      if (end   < _mStart)        return 'hidden';
+      if (end   < _today)         return 'closed';
+      if (start && start > _today) return 'upcoming';
+      return 'view';
+    }
 
     function renderExhibitions(filter = 'all') {
       const exhGrid = document.getElementById('exhGrid');
       exhGrid.innerHTML = '';
 
-      const filtered = filter === 'all'
-        ? EXHIBITIONS
-        : EXHIBITIONS.filter(e => e.type === filter);
+      let items = filter === 'all' ? EXHIBITIONS : EXHIBITIONS.filter(e => e.type === filter);
 
-      filtered.forEach(e => {
+      items = items
+        .map(e => ({ ...e, _s: computeStatus(e) }))
+        .filter(e => e._s !== 'hidden')
+        .sort((a, b) => (a._s === 'closed') - (b._s === 'closed') === 0 ? 0
+                       : a._s === 'closed' ? 1 : -1);
+
+      items.forEach(e => {
         const a = document.createElement('a');
-        a.className = 'exh-card';
+        a.className = `exh-card${e._s === 'closed' ? ' exh-card--closed' : ''}`;
         a.href      = e.url;
         a.target    = '_blank';
         a.rel       = 'noopener';
 
+        const cssStatus = e._s === 'closed' ? 'past' : (e._s === 'view' ? e.status : e._s);
+        const label     = STATUS_LABELS[e._s] || STATUS_LABELS[e.status] || 'On View';
+
         a.innerHTML = `
           <div class="card-top">
             <span class="card-type">${e.type}</span>
-            <span class="card-status status-${e.status}">${STATUS_LABELS[e.status]}</span>
+            <span class="card-status status-${cssStatus}">${label}</span>
           </div>
           <h3 class="card-title">${e.title}</h3>
           <p class="card-venue">${e.venue}</p>
@@ -840,6 +1078,180 @@
         document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         renderExhibitions(btn.dataset.filter);
+      });
+    });
+
+    /* ═══════════════════════════════════════════
+       EVENTS
+    ═══════════════════════════════════════════ */
+
+    const EVENTS = [
+      {
+        name:    'Free & Easy Festival',
+        venue:   'Backstage München',
+        type:    'festival',
+        dates:   'Jul 24 – Aug 9',
+        ends:    '2026-08-09',
+        time:    'Various times',
+        price:   'Free',
+        note:    '30th edition. Over 200 programme points across 17 days — concerts, open-air cinema, parties, readings, and more.',
+        url:     'https://www.backstage.eu/free-and-easy',
+      },
+      {
+        name:    'Summerfestival',
+        venue:   'Olympiapark',
+        type:    'festival',
+        dates:   'Jul 31 – Aug 23',
+        ends:    '2026-08-23',
+        starts:  '2026-07-31',
+        time:    'Mon–Thu 12–23, Fri–Sun 11–23',
+        price:   'Free entry',
+        note:    '24-day summer celebration with rides, food stalls, themed weekends, fireworks, and a Water Lantern Festival.',
+        url:     'https://www.olympiapark.de/en/events/summerfestival-n5524',
+      },
+      {
+        name:    'Papitutmirleid',
+        venue:   'Aahhh',
+        type:    'music',
+        dates:   'Aug 1',
+        ends:    '2026-08-02',
+        starts:  '2026-08-01',
+        time:    'Night',
+        price:   'Ticketed',
+        note:    'Munich night at Aahhh.',
+        url:     'https://www.papitutmirleid.com/pages/papi-at-aahhh',
+      },
+      {
+        name:    'La Casa del Perreo',
+        venue:   'Live Evil',
+        type:    'music',
+        dates:   'Aug 28',
+        ends:    '2026-08-29',
+        starts:  '2026-08-28',
+        time:    '23:00 – 5:00',
+        price:   '€8.90 – 19.40',
+        note:    'Perreo night with DJs from Colombia and Bolivia. Inclusive space with zero tolerance policy.',
+        url:     'https://rausgegangen.de/en/events/la-casa-del-perreo-i-live-evil-i-munchen-5/',
+      },
+      {
+        name:    'Blade Night München',
+        venue:   'Bavariapark (U5 Schwanthalerhöhe)',
+        type:    'outdoor',
+        dates:   'Every Monday',
+        ends:    '2026-09-14',
+        time:    'Start 21:00',
+        price:   'Free (rental 8€)',
+        note:    'Weekly skate through the city with hundreds of others. Just show up and roll. Rental skates available on site.',
+        url:     'https://bladenight-muenchen.de',
+        weekly:  true,
+      },
+      {
+        name:    'Theatron MusikSommer',
+        venue:   'Olympiapark',
+        type:    'outdoor',
+        dates:   'Jul 31 – Aug 22',
+        ends:    '2026-08-22',
+        starts:  '2026-07-31',
+        time:    'Evenings',
+        price:   'Free',
+        note:    'Munich\'s beloved free outdoor summer concert series running nightly at the Olympiapark amphitheatre. Multiple genres across three weeks.',
+        url:     'https://www.theatron.de',
+      },
+      {
+        name:    'Superbloom Festival',
+        venue:   'Olympiapark',
+        type:    'festival',
+        dates:   'Aug 29 – Sep 2',
+        ends:    '2026-09-02',
+        starts:  '2026-08-29',
+        time:    'From 14:00',
+        price:   'From €77.50',
+        note:    'Two festival days and three concert evenings across the historic Olympic Park. Lineup includes Lorde, Kygo, Lewis Capaldi, Zara Larsson, Tom Odell, and Tash Sultana.',
+        url:     'https://superbloom.de',
+      },
+      {
+        name:    'Oktoberfest',
+        venue:   'Theresienwiese',
+        type:    'festival',
+        dates:   'Sep 19 – Oct 4',
+        ends:    '2026-10-04',
+        starts:  '2026-09-19',
+        time:    'Daily from 10:00',
+        price:   'Free entry',
+        note:    'The world-famous Bavarian beer and folk festival — 16 days of traditional music, fairground rides, and beer tents serving six million visitors.',
+        url:     'https://www.oktoberfest.de',
+      },
+    ];
+
+    const EVENT_TYPE_LABELS = { festival: 'Festival', music: 'Music', outdoor: 'Outdoor' };
+
+    function renderEvents(filter = 'all') {
+      const list = document.getElementById('eventList');
+      list.innerHTML = '';
+
+      let items = filter === 'all' ? EVENTS : EVENTS.filter(e => e.type === filter);
+
+      // Hide events that have fully ended (past end date)
+      items = items.filter(e => new Date(e.ends) >= _today);
+
+      // Sort by start date ascending (recurring weekly events sort by end date)
+      items.sort((a, b) => {
+        const da = a.starts ? new Date(a.starts) : new Date(a.ends);
+        const db = b.starts ? new Date(b.starts) : new Date(b.ends);
+        return da - db;
+      });
+
+      items.forEach(e => {
+        const row = document.createElement('a');
+        row.className = 'event-row';
+        row.href      = e.url;
+        row.target    = '_blank';
+        row.rel       = 'noopener';
+
+        let dateCellHtml;
+        if (e.weekly) {
+          dateCellHtml = `<div class="event-date-col">
+            <span class="event-date-weekly">Every<br>Mon</span>
+          </div>`;
+        } else {
+          const d = new Date(e.starts || e.ends);
+          const day = d.toLocaleString('en', { month: 'short' }).toUpperCase();
+          const num = d.getDate();
+          dateCellHtml = `<div class="event-date-col">
+            <span class="event-date-day">${day}</span>
+            <span class="event-date-num">${num}</span>
+          </div>`;
+        }
+
+        row.innerHTML = `
+          ${dateCellHtml}
+          <div class="event-main">
+            <div class="event-name">${e.name}</div>
+            <div class="event-meta">${e.venue} &nbsp;&middot;&nbsp; ${e.time}</div>
+            <div class="event-note">${e.note}</div>
+          </div>
+          <div class="event-right">
+            <span class="event-chip">${EVENT_TYPE_LABELS[e.type]}</span>
+            <span class="event-price">${e.price}</span>
+            <span class="event-arrow">&#8594;</span>
+          </div>
+        `;
+
+        list.appendChild(row);
+      });
+
+      if (!items.length) {
+        list.innerHTML = '<p style="padding: clamp(40px,6vh,64px) clamp(24px,5vw,60px); font-style: italic; color: var(--ink-faint);">No upcoming events in this category.</p>';
+      }
+    }
+
+    renderEvents();
+
+    document.querySelectorAll('.event-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.event-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderEvents(btn.dataset.filter);
       });
     });
 

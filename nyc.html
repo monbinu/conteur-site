@@ -304,7 +304,8 @@
     .status-view    { background: var(--status-view);  color: var(--status-view-text); }
     .status-soon    { background: var(--status-soon);  color: var(--status-soon-text); }
     .status-new     { background: var(--status-new);   color: var(--status-new-text);  }
-    .status-past    { background: rgba(46,40,32,0.08); color: var(--ink-faint);         }
+    .status-past     { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .exh-card--closed { opacity: 0.45; filter: grayscale(0.35); }
 
     .card-title {
       font-size: clamp(1rem, 2vw, 1.35rem);
@@ -911,7 +912,8 @@
         venue:  'The Metropolitan Museum of Art',
         type:   'museum',
         dates:  'May 10 — Sep 2, 2026',
-        status: 'view',        // on view
+        status: 'view',
+        ends:   '2026-09-02',
         desc:   'Over 250 garments and accessories from the Costume Institute, exploring the relationship between fashion, nature, and the passage of time.',
         url:    'https://www.metmuseum.org',
       },
@@ -920,7 +922,8 @@
         venue:  'MoMA',
         type:   'museum',
         dates:  'Jun 20 — Oct 12, 2026',
-        status: 'upcoming',    // opens Jun 20
+        status: 'view',
+        ends:   '2026-10-12',
         desc:   'The most comprehensive exhibition of Picasso\'s three-dimensional work ever mounted in the United States, spanning six decades of material experimentation.',
         url:    'https://www.moma.org',
       },
@@ -929,7 +932,8 @@
         venue:  'Whitney Museum of American Art',
         type:   'museum',
         dates:  'Apr 6 — Aug 16, 2026',
-        status: 'view',        // on view, closes Aug 16
+        status: 'view',
+        ends:   '2026-08-16',
         desc:   'An immersive look at how Hopper transformed the city\'s streets, diners, and hotel rooms into landscapes of American solitude.',
         url:    'https://whitney.org',
       },
@@ -939,6 +943,7 @@
         type:   'museum',
         dates:  'Jun 6 — Jan 18, 2027',
         status: 'new',
+        ends:   '2027-01-18',
         desc:   'The first major US retrospective of Korean artist Haegue Yang, spanning three decades of installation, sculpture, and weaving.',
         url:    'https://www.guggenheim.org',
       },
@@ -948,6 +953,7 @@
         type:   'gallery',
         dates:  'May 22 — Jul 26, 2026',
         status: 'view',
+        ends:   '2026-07-26',
         desc:   'Six artists respond to the landmark 1975 exhibition, reimagining the American landscape through contemporary ecological anxiety.',
         url:    'https://www.tanyabonakdargallery.com',
       },
@@ -957,46 +963,76 @@
         type:   'fair',
         dates:  'May 1 — May 4, 2026',
         status: 'past',
+        ends:   '2026-05-04',
         desc:   'The annual fair brought 65 international galleries to New York, with focused sections on emerging practices from Latin America and East Asia.',
         url:    'https://frieze.com/fairs/frieze-new-york',
+      },
+      {
+        title:  'Whitney Biennial 2026',
+        venue:  'Whitney Museum of American Art',
+        type:   'museum',
+        dates:  'Mar 8 — Aug 23, 2026',
+        status: 'soon',
+        ends:   '2026-08-23',
+        desc:   'The 81st edition of the country\'s foremost survey of contemporary American art, spread across the Whitney\'s full building — exploring themes of creativity, reinvention, and cultural identity.',
+        url:    'https://whitney.org',
+      },
+      {
+        title:  'Nike: Form Follows Motion',
+        venue:  'Museum of Arts and Design',
+        type:   'museum',
+        dates:  'Sep 12, 2026 — Mar 7, 2027',
+        status: 'upcoming',
+        starts: '2026-09-12',
+        ends:   '2027-03-07',
+        desc:   'The first comprehensive design retrospective of Nike\'s 50+ years of innovation, examining the intersection of athletic performance, material culture, and visual identity.',
+        url:    'https://madmuseum.org',
       },
     ];
 
     const STATUS_LABELS = {
-      upcoming: 'Upcoming',
-      upcoming: 'Upcoming',
-      view: 'On View',
-      new:  'Just Opened',
-      soon: 'Closing Soon',
-      past: 'Past',
+      upcoming: 'Upcoming', view: 'On View', new: 'Just Opened',
+      soon: 'Closing Soon', past: 'Past',    closed: 'Closed',
     };
+
+    const _today  = new Date(); _today.setHours(0,0,0,0);
+    const _mStart = new Date(_today.getFullYear(), _today.getMonth(), 1);
+
+    function computeStatus(e) {
+      if (!e.ends) return 'view';
+      const end = new Date(e.ends), start = e.starts ? new Date(e.starts) : null;
+      if (end   < _mStart)         return 'hidden';
+      if (end   < _today)          return 'closed';
+      if (start && start > _today) return 'upcoming';
+      return 'view';
+    }
 
     function renderExhibitions(filter = 'all') {
       const grid = document.getElementById('exhGrid');
       grid.innerHTML = '';
 
-      const filtered = filter === 'all'
-        ? EXHIBITIONS
-        : EXHIBITIONS.filter(e => e.type === filter);
+      let items = filter === 'all' ? EXHIBITIONS : EXHIBITIONS.filter(e => e.type === filter);
+      items = items
+        .map(e => ({ ...e, _s: computeStatus(e) }))
+        .filter(e => e._s !== 'hidden')
+        .sort((a, b) => a._s === 'closed' ? 1 : b._s === 'closed' ? -1 : 0);
 
-      filtered.forEach(e => {
+      items.forEach(e => {
         const a = document.createElement('a');
-        a.className = 'exh-card';
-        a.href      = e.url;
-        a.target    = '_blank';
-        a.rel       = 'noopener';
-
+        a.className = `exh-card${e._s === 'closed' ? ' exh-card--closed' : ''}`;
+        a.href = e.url; a.target = '_blank'; a.rel = 'noopener';
+        const cssStatus = e._s === 'closed' ? 'past' : (e._s === 'view' ? e.status : e._s);
+        const label     = STATUS_LABELS[e._s] || STATUS_LABELS[e.status] || 'On View';
         a.innerHTML = `
           <div class="card-top">
             <span class="card-type">${e.type}</span>
-            <span class="card-status status-${e.status}">${STATUS_LABELS[e.status]}</span>
+            <span class="card-status status-${cssStatus}">${label}</span>
           </div>
           <h3 class="card-title">${e.title}</h3>
           <p class="card-venue">${e.venue}</p>
           <p class="card-desc">${e.desc}</p>
           <p class="card-dates">${e.dates}</p>
         `;
-
         grid.appendChild(a);
       });
     }

@@ -289,7 +289,8 @@
     .status-view { background: #2d4a2d; color: #7ec87e; }
     .status-soon { background: #4a2d2d; color: #c87e7e; }
     .status-new  { background: #2d3a4a; color: #7eaac8; }
-    .status-past { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .status-past     { background: rgba(46,40,32,0.08); color: var(--ink-faint); }
+    .exh-card--closed { opacity: 0.45; filter: grayscale(0.35); }
 
     .card-title {
       font-size: clamp(1rem, 2vw, 1.35rem);
@@ -582,11 +583,44 @@
 
     const EXHIBITIONS = [
       {
+        title:  'Brancusi',
+        venue:  'Neue Nationalgalerie',
+        type:   'museum',
+        dates:  'Mar 20 — Aug 9, 2026',
+        status: 'soon',
+        ends:   '2026-08-09',
+        desc:   '150+ sculptures, photographs, drawings, and films by Constantin Brancusi — including a partial reconstruction of his legendary Paris studio, shown outside France for the first time since 1957. Key works: The Kiss, Bird in Space, Endless Column.',
+        url:    'https://www.smb.museum',
+      },
+      {
+        title:  '"Degenerate Art" — Abstraction Under Persecution',
+        venue:  'Neue Nationalgalerie',
+        type:   'museum',
+        dates:  'Oct 30, 2026 — Jan 31, 2027',
+        status: 'upcoming',
+        starts: '2026-10-30',
+        ends:   '2027-01-31',
+        desc:   'How abstract artists — Baumeister, Höch, Jawlensky — continued developing non-objective art despite exhibition bans, confiscation, and defamation under the Nazi regime. Curated by Florian Illies and Maike Steinkamp.',
+        url:    'https://www.smb.museum',
+      },
+      {
+        title:  'Sophie Calle: Is It Better?',
+        venue:  'Hamburger Bahnhof',
+        type:   'museum',
+        dates:  'Nov 13, 2026 — May 2, 2027',
+        status: 'upcoming',
+        starts: '2026-11-13',
+        ends:   '2027-05-02',
+        desc:   'Sophie Calle\'s first Berlin solo in over 20 years, marking Hamburger Bahnhof\'s 30th anniversary — six bodies of work spanning photography, text, installation, and video, plus a new commission entering the permanent collection.',
+        url:    'https://www.smb.museum',
+      },
+      {
         title:  'Joseph Beuys: Parallelprozesse',
         venue:  'Hamburger Bahnhof',
         type:   'museum',
         dates:  'Apr 11 — Sep 14, 2026',
         status: 'view',
+        ends:   '2026-09-14',
         desc:   'A major reassessment of Beuys drawing on the Nationalgalerie\'s extensive holdings — felt suits, blackboards, multiples, and rarely seen archival material from the artist\'s time in Berlin.',
         url:    'https://www.smb.museum/museen-einrichtungen/hamburger-bahnhof/',
       },
@@ -596,6 +630,7 @@
         type:   'museum',
         dates:  'Jun 7 — Oct 19, 2026',
         status: 'new',
+        ends:   '2026-10-19',
         desc:   'The Berlin-based artist\'s most comprehensive institutional survey to date. New commissions, early video works, and an expanded version of Factory of the Sun fill Mies van der Rohe\'s glass temple.',
         url:    'https://www.smb.museum/museen-einrichtungen/neue-nationalgalerie/',
       },
@@ -605,6 +640,7 @@
         type:   'museum',
         dates:  'May 30 — Aug 31, 2026',
         status: 'view',
+        ends:   '2026-08-31',
         desc:   'Immersive video and sound installations by the Uzbek artist exploring ancestral memory, nomadism, and the body as archive. Presented across KW\'s full exhibition space.',
         url:    'https://www.kw-berlin.de',
       },
@@ -614,6 +650,7 @@
         type:   'gallery',
         dates:  'Jun 6 — Jul 26, 2026',
         status: 'new',
+        ends:   '2026-07-26',
         desc:   'New large-scale paintings from Brown\'s most recent body of work — baroque in energy, loose in handling, saturated in art-historical reference. Her Berlin debut with the gallery.',
         url:    'https://www.maxhetzler.com',
       },
@@ -623,6 +660,7 @@
         type:   'gallery',
         dates:  'May 3 — Jul 12, 2026',
         status: 'view',
+        ends:   '2026-07-12',
         desc:   'New paintings and drawings building on the themes of Imhof\'s landmark Venice Pavilion. Raw, confrontational, and unmistakably Berlin in their mood and register.',
         url:    'https://www.galeriebuchholz.de',
       },
@@ -630,33 +668,52 @@
         title:  'Berlin Art Week 2026',
         venue:  'Various Venues',
         type:   'fair',
-        dates:  'Sep 16 — Sep 21, 2026',
+        dates:  'Sep 9 — Sep 13, 2026',
         status: 'upcoming',
+        starts: '2026-09-09',
+        ends:   '2026-09-13',
         desc:   'The annual convergence of galleries, institutions, and independent spaces across the city. Includes the abc art berlin contemporary fair and Gallery Weekend Berlin satellite programme.',
         url:    'https://www.berlinartweek.de',
       },
     ];
 
     const STATUS_LABELS = {
-      upcoming: 'Upcoming',
-      view: 'On View',
-      new:  'Just Opened',
-      soon: 'Closing Soon',
-      past: 'Past',
+      upcoming: 'Upcoming', view: 'On View', new: 'Just Opened',
+      soon: 'Closing Soon', past: 'Past',    closed: 'Closed',
     };
+
+    const _today  = new Date(); _today.setHours(0,0,0,0);
+    const _mStart = new Date(_today.getFullYear(), _today.getMonth(), 1);
+
+    function computeStatus(e) {
+      if (!e.ends) return 'view';
+      const end = new Date(e.ends), start = e.starts ? new Date(e.starts) : null;
+      if (end   < _mStart)         return 'hidden';
+      if (end   < _today)          return 'closed';
+      if (start && start > _today) return 'upcoming';
+      return 'view';
+    }
 
     function renderExhibitions(filter = 'all') {
       const exhGrid = document.getElementById('exhGrid');
       exhGrid.innerHTML = '';
-      const filtered = filter === 'all' ? EXHIBITIONS : EXHIBITIONS.filter(e => e.type === filter);
-      filtered.forEach(e => {
+
+      let items = filter === 'all' ? EXHIBITIONS : EXHIBITIONS.filter(e => e.type === filter);
+      items = items
+        .map(e => ({ ...e, _s: computeStatus(e) }))
+        .filter(e => e._s !== 'hidden')
+        .sort((a, b) => a._s === 'closed' ? 1 : b._s === 'closed' ? -1 : 0);
+
+      items.forEach(e => {
         const a = document.createElement('a');
-        a.className = 'exh-card';
+        a.className = `exh-card${e._s === 'closed' ? ' exh-card--closed' : ''}`;
         a.href = e.url; a.target = '_blank'; a.rel = 'noopener';
+        const cssStatus = e._s === 'closed' ? 'past' : (e._s === 'view' ? e.status : e._s);
+        const label     = STATUS_LABELS[e._s] || STATUS_LABELS[e.status] || 'On View';
         a.innerHTML = `
           <div class="card-top">
             <span class="card-type">${e.type}</span>
-            <span class="card-status status-${e.status}">${STATUS_LABELS[e.status]}</span>
+            <span class="card-status status-${cssStatus}">${label}</span>
           </div>
           <h3 class="card-title">${e.title}</h3>
           <p class="card-venue">${e.venue}</p>
