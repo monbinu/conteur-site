@@ -755,5 +755,63 @@
     })();
   </script>
 
+
+  <!-- ── Cookie Consent + Google Analytics ──── -->
+  <style>
+    #consent-banner {
+      display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+      background: #2e2820; border-top: 1px solid #3d2e1a;
+      padding: 14px 24px; align-items: center; justify-content: space-between;
+      gap: 16px; flex-wrap: wrap;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    #consent-banner p {
+      font-size: 0.7rem; letter-spacing: 0.05em; color: #8a7e70;
+      line-height: 1.6; flex: 1; min-width: 200px;
+    }
+    #consent-banner p a { color: #c8a060; text-decoration: none; }
+    .consent-btns { display: flex; gap: 10px; flex-shrink: 0; }
+    .consent-btn {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 7px 16px; border: 1px solid; cursor: pointer; background: none;
+    }
+    .consent-btn--accept { background: #c8a060; color: #2e2820; border-color: #c8a060; }
+    .consent-btn--decline { color: #8a7e70; border-color: #3d2e1a; }
+    .consent-btn--decline:hover { border-color: #8a7e70; color: #f4efe6; }
+  </style>
+  <div id="consent-banner">
+    <p>This site uses cookies to understand how visitors use it.
+      <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Learn more</a></p>
+    <div class="consent-btns">
+      <button class="consent-btn consent-btn--decline" onclick="_consentDecline()">Decline</button>
+      <button class="consent-btn consent-btn--accept" onclick="_consentAccept()">Accept</button>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var GA_ID = 'G-DB4WL20R5P';
+      function loadGA() {
+        var s = document.createElement('script');
+        s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        window.gtag = gtag; gtag('js', new Date()); gtag('config', GA_ID);
+      }
+      var stored = localStorage.getItem('conteur_consent');
+      if (stored === 'accepted') loadGA();
+      if (!stored) document.getElementById('consent-banner').style.display = 'flex';
+      window._consentAccept = function () {
+        localStorage.setItem('conteur_consent', 'accepted');
+        document.getElementById('consent-banner').style.display = 'none';
+        loadGA();
+      };
+      window._consentDecline = function () {
+        localStorage.setItem('conteur_consent', 'declined');
+        document.getElementById('consent-banner').style.display = 'none';
+      };
+    })();
+  </script>
 </body>
 </html>
